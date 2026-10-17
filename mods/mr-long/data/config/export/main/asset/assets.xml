@@ -1,0 +1,189 @@
+<ModOps>
+    <ModOp GUID="191388" Type="addNextSibling">
+        <Asset>
+            <Template>GuildhouseItem</Template>
+            <Values>
+                <Standard>
+                    <GUID>1400000006</GUID>
+                    <Name>chuanxiaotouzi</Name>
+                    <IconFilename>data/modgraphics/icons/icon_chuanxiaotouzi.png</IconFilename>
+                    <InfoDescription>21354</InfoDescription>
+                </Standard>
+                <Text>
+                    <LocaText>
+                        <English>
+                            <Text>Feras Alsarami the Persuader</Text>
+                            <Status>Exported</Status>
+                        </English>
+                    </LocaText>
+                    <LineID>29139</LineID>
+                </Text>
+                <Item>
+                    <MaxStackSize>1</MaxStackSize>
+                    <Rarity>Legendary</Rarity>
+                    <ItemType>Specialist</ItemType>
+                    <TradePrice>1000</TradePrice>
+                    <TradePriceOnlineCurrency>50</TradePriceOnlineCurrency>
+                    <ReapplyEffects>EmpireOfTheSkies</ReapplyEffects>
+                </Item>
+                
+                <FactoryUpgrade>
+                    <!-- 生产力提升 -->
+                    <ProductivityUpgrade>
+                        <Value>300</Value>
+                        <Percental>1</Percental>
+                    </ProductivityUpgrade>
+                </FactoryUpgrade>
+                
+                <!-- 对什么建筑其效果 -->
+                <ItemEffect>
+                    <EffectTargets>
+                        <!-- 生产建筑 -->
+                        <Item>
+                            <GUID>193856</GUID>
+                        </Item>
+                        <!-- 果园，化学厂，工匠工作坊，生产线 -->
+                        <Item>
+                            <GUID>194008</GUID>
+                        </Item>
+                        <Item>
+                            <GUID>194011</GUID>
+                        </Item>
+                        <Item>
+                            <GUID>194023</GUID>
+                        </Item>
+                        <Item>
+                            <GUID>194024</GUID>
+                        </Item>
+                    </EffectTargets>
+                </ItemEffect>
+
+                <ItemAction />
+                
+                <!-- 提供电力 -->
+                <IndustrializableUpgrade>
+                    <ProvidedIndustrializationType>Powerplant</ProvidedIndustrializationType>
+                    <ElectricityBoostUpgrade />
+                    <ProvideIndustrialization>1</ProvideIndustrialization>
+                </IndustrializableUpgrade>
+
+                <!-- 其他建筑效果 -->
+                <BuildingUpgrade>
+                    <!-- 维护费用减少 -->
+                    <MaintenanceUpgrade>
+                        <Value>-75</Value>
+                        <Percental>1</Percental>
+                    </MaintenanceUpgrade>
+                    <!-- 劳动力减少 -->
+                    <WorkforceAmountUpgrade>
+                        <Value>-75</Value>
+                        <Percental>1</Percental>
+                    </WorkforceAmountUpgrade>
+                </BuildingUpgrade>
+                
+                <!-- 减少起义，起火，爆炸，传染病几率 -->
+                <IncidentInfectableUpgrade>
+                    <IncidentRiotIncreaseUpgrade>
+                        <Value>-99</Value>
+                        <Percental>1</Percental>
+                    </IncidentRiotIncreaseUpgrade>
+                    <IncidentFireIncreaseUpgrade>
+                        <Value>-99</Value>
+                        <Percental>1</Percental>
+                    </IncidentFireIncreaseUpgrade>
+                    <IncidentIllnessIncreaseUpgrade>
+                        <Value>-99</Value>
+                        <Percental>1</Percental>
+                    </IncidentIllnessIncreaseUpgrade>
+                    <IncidentExplosionIncreaseUpgrade>
+                        <Value>-99</Value>
+                        <Percental>1</Percental>
+                    </IncidentExplosionIncreaseUpgrade>
+                </IncidentInfectableUpgrade>
+
+                <!-- 远征属性 -->
+                <ExpeditionAttribute>
+                    <BaseMorale>0</BaseMorale>
+                    <ExpeditionAttributes>
+                        <Item>
+                            <Attribute>PerkMale</Attribute>
+                            <Amount>1</Amount>
+                        </Item>
+                        <Item>
+                            <Attribute>Diplomacy</Attribute>
+                            <Amount>20</Amount>
+                        </Item>
+                        <Item>
+                            <Attribute>PerkHypnotist</Attribute>
+                            <Amount>1</Amount>
+                        </Item>
+                    </ExpeditionAttributes>
+                    <ItemDifficulties>Average;Hard</ItemDifficulties>
+                    <FluffText>21354</FluffText>
+                </ExpeditionAttribute>
+
+                <IncidentInfluencerUpgrade />
+                <ModuleOwnerUpgrade />
+                <CultureUpgrade />
+                <ResidenceUpgrade />
+                <PopulationUpgrade />
+                <Locked />
+                <Buff />
+                <CraftableItem />
+                <HeaterUpgrade />
+                <PowerplantUpgrade />
+                <IrrigationUpgrade />
+                <EcoSystemProviderUpgrade />
+            </Values>
+        </Asset>
+    </ModOp>
+
+    <!-- Old World -->
+    <!-- 192069: Sir Archbald -->
+    <!-- 190774: Eli Bleakworth (Jailer) -->
+    <!-- 192068: Madame Kahina (Emporio Exotique) -->
+    <!-- 192070: Anne Harlow (Pirates) -->
+    <ModOp Type="add" GUID="192069,190774,192068,192070" Path="/Values/RewardPool/ItemsPool">
+        <Item>
+            <ItemLink>1400000006</ItemLink>
+            <Weight>100</Weight>
+        </Item>
+    </ModOp>
+
+    <!-- New World -->
+    <!-- 192073: Isabel Sarmento -->
+    <!-- 192071: Jean La Fortune (Pirates) -->
+    <ModOp Type="add" GUID="192073,192071" Path="/Values/RewardPool/ItemsPool">
+        <Item>
+            <ItemLink>1400000006</ItemLink>
+            <Weight>100</Weight>
+        </Item>
+    </ModOp>
+
+    <!-- Cape Trelawney -->
+    <!-- 193452: Old Nate -->
+    <ModOp Type="add" GUID="193452" Path="/Values/RewardPool/ItemsPool">
+        <Item>
+            <ItemLink>1400000006</ItemLink>
+            <Weight>100</Weight>
+        </Item>
+    </ModOp>
+
+    <!-- Arctic -->
+    <!-- 193835: Qumaq -->
+    <ModOp Type="add" GUID="193835" Path="/Values/RewardPool/ItemsPool">
+        <Item>
+            <ItemLink>1400000006</ItemLink>
+            <Weight>100</Weight>
+        </Item>
+    </ModOp>
+
+    <!-- Enbesa -->
+    <!-- 127480: Emperor Ketema -->
+    <ModOp Type="add" GUID="127480" Path="/Values/RewardPool/ItemsPool">
+        <Item>
+            <ItemLink>1400000006</ItemLink>
+            <Weight>100</Weight>
+        </Item>
+    </ModOp>
+</ModOps>

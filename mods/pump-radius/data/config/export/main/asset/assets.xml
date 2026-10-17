@@ -1,0 +1,10 @@
+<ModOps>
+    <!-- Gas -->
+    <ModOp Type="merge" GUID='112690' Path="/Values/ModuleOwner">
+        <ModuleBuildRadius>20</ModuleBuildRadius>
+    </ModOp>
+    <!-- Oil -->
+    <ModOp Type="merge" GUID='101331' Path="/Values/ModuleOwner">
+        <ModuleBuildRadius>20</ModuleBuildRadius>
+    </ModOp>
+</ModOps>

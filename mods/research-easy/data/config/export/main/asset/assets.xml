@@ -1,0 +1,42 @@
+<ModOps>
+	<!-- 调整研究成本增加 -->
+	<!-- 128475 => Item Crafting Research Costs Common -->
+	<!-- 128952 => Item Crafting Research Costs Uncommon -->
+	<!-- 128953 => Item Crafting Research Costs Rare -->
+	<!-- 128954 => Item Crafting Research Costs Epic -->
+	<!-- 128955 => Item Crafting Research Costs Legendary -->
+	<!-- 129525 => Permit  Crafting Costs Balancing -->
+	<!-- 126888 => Godlike Research Costs Balancing -->
+	<!-- 123401 => Recipe  Research Costs Balancing -->
+	<ModOp Type="replace" GUID='128475,128952,128953,128954,128955,129525,126888,123401' Path="/Values/ProgressBalancing">
+		<ProgressBalancing>
+			<Progress>
+				<Item>
+					<Value>500</Value>
+				</Item>
+			</Progress>
+			<PostProgress>
+				<ThresholdInterval>0</ThresholdInterval>
+				<ValueIncrease>0</ValueIncrease>
+			</PostProgress>
+		</ProgressBalancing>
+	</ModOp>
+	<!-- 调整研究时间: 达到 10000 工程师的时候下降到1分钟 -->
+	<ModOp GUID = '120244' Type = "replace" Path = '/Values/ResearchFeature/ItemCraftingConfig/*/MaximumWorkforceTime'>
+        <MaximumWorkforceTime>60000</MaximumWorkforceTime>
+    </ModOp>
+    <ModOp GUID = '120244' Type = "replace" Path = '/Values/ResearchFeature/ItemCraftingConfig/*/MaximumWorkforceAmount'>
+        <MaximumWorkforceAmount>10000</MaximumWorkforceAmount>
+    </ModOp>
+	<ModOp Path = "//Godlike/CraftingConfig/MaximumWorkforceTime" Type = "replace">
+        <MaximumWorkforceTime>60000</MaximumWorkforceTime>
+    </ModOp>
+    <ModOp Path = "//Godlike/CraftingConfig/MaximumWorkforceAmount" Type = "replace">
+        <MaximumWorkforceAmount>10000</MaximumWorkforceAmount>
+    </ModOp>
+	<!-- Make Gas Mines Movable (By Taube) -->
+	<ModOp GUID = '112691' Path = "/Values/Building" Type = "add">
+		<Movable>1</Movable>
+		<MoveRequiredGodlike>MoveOil</MoveRequiredGodlike>
+	</ModOp>
+</ModOps>

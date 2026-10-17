@@ -1,0 +1,7 @@
+<ModOps>
+  <!-- Old World 962, New World 963 -->
+  <!-- Original LoadingSpeed == 2 -->
+  <ModOp Type="merge" GUID="962,963" Path="/Values/LoadingPier">
+    <LoadingSpeed>8</LoadingSpeed>
+  </ModOp>
+</ModOps>

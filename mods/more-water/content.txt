@@ -1,0 +1,2 @@
+Erweitert den Grünstreifen um Wasserquellen und Kanäle.
+Extends the green belt around water sources and canals.

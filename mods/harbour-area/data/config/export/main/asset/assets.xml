@@ -1,0 +1,7 @@
+<ModOps>
+    <!-- Original Building Size for Harbors/Beachlines == 28, original for creative mode == 56 -->
+    <ModOp Type="merge" GUID='2001241' Path="/Values/BuildingBaseTiles">
+      <HarbourConstructionAreaRadius>56</HarbourConstructionAreaRadius>
+      <!-- <HarbourConstructionAreaRadiusCreativeMode>56</HarbourConstructionAreaRadiusCreativeMode> -->
+    </ModOp>
+</ModOps>

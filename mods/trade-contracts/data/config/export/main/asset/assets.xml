@@ -1,0 +1,157 @@
+<ModOps>
+  <!-- Tattershire -->
+  <ModOp Type = "add" GUID='131764' Path="/Values/TradeContractFeature/Traders/Item[TraderName = '131819']/TradeLevels/Item[Unlock = '131852']/Trades">
+    <Item>
+      <!-- 小麦粉 -->
+      <Level>Rare</Level>
+      <Good>1010235</Good>
+    </Item>
+    <Item>
+      <!-- 鱼油 -->
+      <Level>Rare</Level>
+      <Good>120042</Good>
+    </Item>
+    <Item>
+      <!-- 甘蔗 -->
+      <Level>Rare</Level>
+      <Good>1010251</Good>
+    </Item>
+    <Item>
+      <!-- 棉花 -->
+      <Level>Rare</Level>
+      <Good>1010253</Good>
+    </Item>
+    <Item>
+      <!-- 糖 -->
+      <Level>Epic</Level>
+      <Good>1010239</Good>
+    </Item>
+    <Item>
+      <!-- 树脂 -->
+      <Level>Epic</Level>
+      <Good>135086</Good>
+    </Item>
+    <Item>
+      <!-- 樱桃原木 -->
+      <Level>Epic</Level>
+      <Good>135087</Good>
+    </Item>
+    <Item>
+      <!-- 肉桂 -->
+      <Level>Epic</Level>
+      <Good>133093</Good>
+    </Item>
+    <Item>
+      <!-- 椰子油 -->
+      <Level>Epic</Level>
+      <Good>133095</Good>
+    </Item>
+    <Item>
+      <!-- 柑橘水果 -->
+      <Level>Epic</Level>
+      <Good>133097</Good>
+    </Item>
+    <Item>
+      <!-- 樟脑油 -->
+      <Level>Epic</Level>
+      <Good>134616</Good>
+    </Item>
+    <Item>
+      <!-- 万扎木材 -->
+      <Level>Epic</Level>
+      <Good>114356</Good>
+    </Item>
+  </ModOp>
+  <!-- FEEDL -->
+  <!-- Chanteuse -->
+  <ModOp Type = "add" GUID='131764' Path="/Values/TradeContractFeature/Traders/Item[TraderName = '131765']/TradeLevels/Item[Unlock = '131824']/Trades">
+    <Item>
+      <!-- 鲸油 -->
+      <Level>Epic</Level>
+      <Good>112699</Good>
+    </Item>
+    <Item>
+      <!-- 海豹皮 -->
+      <Level>Epic</Level>
+      <Good>112696</Good>
+    </Item>
+    <Item>
+      <!-- 熊毛皮 -->
+      <Level>Legendary</Level>
+      <Good>112695</Good>
+    </Item>
+  </ModOp>
+  <!-- Qinsa Mining -->
+  <!-- Old Levant & Co. -->
+  <ModOp Type = "add" GUID='131764' Path="/Values/TradeContractFeature/Traders/Item[TraderName = '131767']/TradeLevels/Item[Unlock = '131828']/Trades">
+    <Item>
+      <!-- 山羊奶 -->
+      <Level>Epic</Level>
+      <Good>114371</Good>
+    </Item>
+    <Item>
+      <!-- 木槿 -->
+      <Level>Epic</Level>
+      <Good>114364</Good>
+    </Item>
+    <Item>
+      <!-- 龙虾 -->
+      <Level>Epic</Level>
+      <Good>118728</Good>
+    </Item>
+    <Item>
+      <!-- 药草 -->
+      <Level>Epic</Level>
+      <Good>5383</Good>
+    </Item>
+    <Item>
+      <!-- 牛奶 -->
+      <Level>Epic</Level>
+      <Good>5385</Good>
+    </Item>
+    <Item>
+      <!-- 兰花 -->
+      <Level>Epic</Level>
+      <Good>5386</Good>
+    </Item>
+  </ModOp>
+  <!-- KITEA -->
+  <ModOp Type = "add" GUID='131764' Path="/Values/TradeContractFeature/Traders/Item[TraderName = '131811']/TradeLevels/Item[Unlock = '131836']/Trades">  
+  </ModOp>
+  <!-- The Promise Trust -->
+  <!-- Ganymedia -->
+  <ModOp Type = "add" GUID='131764' Path="/Values/TradeContractFeature/Traders/Item[TraderName = '131813']/TradeLevels/Item[Unlock = '131840']/Trades">
+    <Item>
+      <!-- 手抄本 -->
+      <Level>Legendary</Level>
+      <Good>117698</Good>
+    </Item>
+  </ModOp>
+  <ModOp Type = "add" GUID='131764' Path="/Values/TradeContractFeature/Traders/Item[TraderName = '131817']/TradeLevels/Item[Unlock = '131847']/Trades">
+    <Item>
+      <!-- 口香糖 -->
+      <Level>Legendary</Level>
+      <Good>135186</Good>
+    </Item>
+    <Item>
+      <!-- 乙醇 -->
+      <Level>Legendary</Level>
+      <Good>135130</Good>
+    </Item>
+    <Item>
+      <!-- 赛璐珞 -->
+      <Level>Legendary</Level>
+      <Good>135150</Good>
+    </Item>
+    <Item>
+      <!-- 电梯 -->
+      <Level>Legendary</Level>
+      <Good>134623</Good>
+    </Item>
+    <Item>
+      <!-- 亮面漆 -->
+      <Level>Legendary</Level>
+      <Good>135129</Good>
+    </Item>
+  </ModOp>
+</ModOps>

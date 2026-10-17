@@ -1,0 +1,33 @@
+<ModOps>
+	<ModOp Type="replace" GUID='114544' Path="/Values/IrrigationSource/PipeFillCapacity">
+		<PipeFillCapacity>1000</PipeFillCapacity>
+	</ModOp>
+	<!--Irrigation zone around the water-->
+	<ModOp Type="merge" GUID="114759" Path="/Values/IrrigationConfig/IrrigationTiles/IrrigationTileDefinitions">
+		<Source_River>
+			<SourceSpreadMin>8</SourceSpreadMin>
+			<SourceSpredMax>8</SourceSpredMax>
+			<TileItselfIsIrrigated>1</TileItselfIsIrrigated>
+		</Source_River>
+		<Source_Canal>
+			<SourceSpreadMin>8</SourceSpreadMin>
+			<SourceSpredMax>8</SourceSpredMax>
+			<TileItselfIsIrrigated>1</TileItselfIsIrrigated>
+		</Source_Canal>
+		<Source_Lake_Small>
+			<SourceSpreadMin>8</SourceSpreadMin>
+			<SourceSpredMax>8</SourceSpredMax>
+			<TileItselfIsIrrigated>1</TileItselfIsIrrigated>
+		</Source_Lake_Small>
+		<Source_Lake_Medium>
+			<SourceSpreadMin>9</SourceSpreadMin>
+			<SourceSpredMax>9</SourceSpredMax>
+			<TileItselfIsIrrigated>1</TileItselfIsIrrigated>
+		</Source_Lake_Medium>
+		<Source_Lake_Large>
+			<SourceSpreadMin>11</SourceSpreadMin>
+			<SourceSpredMax>11</SourceSpredMax>
+			<TileItselfIsIrrigated>1</TileItselfIsIrrigated>
+		</Source_Lake_Large>
+    </ModOp>
+</ModOps>

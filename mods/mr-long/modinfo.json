@@ -1,0 +1,11 @@
+{
+  "Version": "1.0.0",
+  "ModID": "local-mr-long",
+  "ModName": {
+    "English": "Mr.Long the Persuader",
+    "Chinese": "传销头子"
+  },
+  "LoadAfterIds": [
+    "local-all-items-unlocked"
+  ]
+}

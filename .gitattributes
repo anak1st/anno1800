@@ -1,0 +1,6 @@
+# mods/ 是要往游戏目录同步的成品：文本文件统一 UTF-8（无 BOM）+ Windows 换行（CRLF），
+# 和游戏目录里的文件逐字节一致。二进制（.png 等）不在此列。
+mods/**/*.md   text eol=crlf
+mods/**/*.json text eol=crlf
+mods/**/*.xml  text eol=crlf
+mods/**/*.txt  text eol=crlf

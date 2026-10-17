@@ -1,0 +1,213 @@
+<ModOps>
+	<!-- THE OLD WORLD AND CAPE TRELAWNEY -->
+	<!-- PALACE -->
+	<ModOp Type="merge" GUID="249947" Path="/Values/Palace">
+		<BaseStreetRange>1000</BaseStreetRange>
+		<AdditionalStreetRangePerModule>100</AdditionalStreetRangePerModule>
+	</ModOp>
+	<!-- MARKETPLACE -->
+	<ModOp Type="merge" GUID="1010372" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- PUB -->
+	<ModOp Type="merge" GUID="1010358" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- CHURCH -->
+	<ModOp Type="merge" GUID="1010359" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- SCHOOL -->
+	<ModOp Type="merge" GUID="1010360" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- VARIETY THEATRE -->
+	<ModOp Type="merge" GUID="1010361" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- UNIVERSITY -->
+	<ModOp Type="merge" GUID="1010362" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- BANK -->
+	<ModOp Type="merge" GUID="1010365" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- MEMBERS CLUB -->
+	<ModOp Type="merge" GUID="1010364" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- RADIO TOWER -->
+	<ModOp Type="merge" GUID="118736" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- OIL POWER PLANT -->
+	<ModOp Type="Merge" GUID="100780" Path="/Values/Powerplant">
+		<IndustrializationDistance>1000</IndustrializationDistance>
+	</ModOp>
+	<ModOp Type="Add" GUID="100780" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- GAS POWER PLANT -->
+	<ModOp Type="Merge" GUID="117547" Path="/Values/Powerplant">
+		<IndustrializationDistance>1000</IndustrializationDistance>
+	</ModOp>
+	<ModOp Type="Merge" GUID="117547" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- POST OFFICE -->
+	<ModOp Type="Merge" GUID="3741" Path="/Values/ItemContainer">
+		<SocketScopeRadius>150</SocketScopeRadius>
+		<SocketScopeRadiusOverlapCategory>None</SocketScopeRadiusOverlapCategory>
+	</ModOp>
+	<!-- DEPARTMENT STORE, FURNITURE STORE, DRUG STORE -->
+	<ModOp Type="Merge" GUID="134631,135103,135105,135187,135188,135189,135190,135120,135121,135122,135123,135191,135192,135193,135194" Path="/Values/BuffFactory/PublicServiceData">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<ModOp Type="Merge" GUID="134631,135103,135105,135187,135188,135189,135190,135120,135121,135122,135123,135191,135192,135193,135194" Path="/Values/BuffFactory">
+		<ProductionBuffDistance>175</ProductionBuffDistance>
+	</ModOp>
+	<!-- BAR -->
+	<ModOp Type="Merge" GUID="6137,132752,133342,133343,133345,133346" Path="/Values/BuffFactory">
+		<ProductionBuffDistance>175</ProductionBuffDistance>
+	</ModOp>
+	<!-- BUS STOP -->
+	<ModOp Type="Merge" GUID="601326" Path="/Values/BusStop">
+		<ActivationRadius>175</ActivationRadius>
+		<StreetConnectionRange>1500</StreetConnectionRange>
+	</ModOp>
+	<!-- CAFE -->
+	<ModOp Type="Merge" GUID="6138,133347,133348,133349,133350,132753" Path="/Values/BuffFactory">
+		<ProductionBuffDistance>175</ProductionBuffDistance>
+	</ModOp>
+	<!-- THE IRON TOWER -->
+	<ModOp Type="add" GUID="133928,133930,133931,133932,133933" Path="/Values/BuffFactory">
+		<ProductionBuffDistance>175</ProductionBuffDistance>
+	</ModOp>
+	<!-- RESTAURANT -->
+	<ModOp Type="Merge" GUID="6136,132747,133339,133340,133341,132750" Path="/Values/BuffFactory">
+		<ProductionBuffDistance>175</ProductionBuffDistance>
+	</ModOp>
+	<!-- NEW WORLD -->
+	<!-- MARKETPLACE -->
+	<ModOp Type="Merge" GUID="101257" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- CHAPEL -->
+	<ModOp Type="Merge" GUID="101258" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- DAM -->
+	<ModOp Type="Merge" GUID="6006" Path="/Values/Powerplant">
+		<IndustrializationDistance>1000</IndustrializationDistance>
+	</ModOp>
+	<ModOp Type="Merge" GUID="6006" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- FUEL POWER PLANT -->
+	<ModOp Type="Merge" GUID="7399" Path="/Values/Powerplant">
+		<IndustrializationDistance>1000</IndustrializationDistance>
+	</ModOp>
+	<ModOp Type="Merge" GUID="7399" Path="/Values/PublicService">
+	<FullSatisfactionDistance>995</FullSatisfactionDistance>
+	<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- POWER STATION -->
+	<ModOp Type="Merge" GUID="5164" Path="/Values/Powerplant">
+		<IndustrializationDistance>1000</IndustrializationDistance>
+	</ModOp>
+	<ModOp Type="Merge" GUID="5164" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- POST OFFICE -->
+	<ModOp Type="Merge" GUID="3761" Path="/Values/ItemContainer">
+		<SocketScopeRadius>250</SocketScopeRadius>
+		<SocketScopeRadiusOverlapCategory>None</SocketScopeRadiusOverlapCategory>
+	</ModOp>
+	<!-- HACIENDA - RADIUS -->
+	<ModOp Type="Add" GUID="24768" Path="/Values/Hacienda">
+		<HaciendaRadius>200</HaciendaRadius>
+	</ModOp>
+	<!-- HACIENDA - SATISFACTION -->
+	<ModOp Type="Add" GUID="24768" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- CHAPEL -->
+	<ModOp Type="Merge" GUID="101258" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- SAMBA SCHOOL -->
+	<ModOp Type="Merge" GUID="5840" Path="/Values/BuffFactory/PublicServiceData">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- BEACH -->
+	<ModOp Type="Merge" GUID="6264" Path="/Values/BuffFactory/PublicServiceData">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- CINEMA -->
+	<ModOp Type="Merge" GUID="6018" Path="/Values/BuffFactory/PublicServiceData">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- BOXING ARENA -->
+	<ModOp Type="Merge" GUID="101259" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- ENBESA -->
+	<!-- MARKETPLACE -->
+	<ModOp Type="Merge" GUID="114518" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- MUSICIAN'S COURT -->
+	<ModOp Type="Merge" GUID="114519" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- MONASTERY -->
+	<ModOp Type="Merge" GUID="114520" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- ARTIC -->
+	<!-- POST OFFICE - RADIUS -->
+	<ModOp Type="Merge" GUID="4260" Path="/Values/ItemContainer">
+		<SocketScopeRadius>125</SocketScopeRadius>
+		<SocketScopeRadiusOverlapCategory>None</SocketScopeRadiusOverlapCategory>
+	</ModOp>
+	<!-- POST OFFICE - SATISFACTION -->
+	<ModOp Type="Merge" GUID="4260" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+	<!-- ARCTIC HEATER -->
+	<ModOp Type="Add" GUID="114751" Path="/Values/HeatProvider">
+		<HeatRange>1000</HeatRange>
+	</ModOp>
+	<!-- CANTEEN -->
+	<ModOp Type="Merge" GUID="114889" Path="/Values/PublicService">
+		<FullSatisfactionDistance>995</FullSatisfactionDistance>
+		<NoSatisfactionDistance>1000</NoSatisfactionDistance>
+	</ModOp>
+</ModOps>

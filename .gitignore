@@ -1,0 +1,40 @@
+# ---------------------------------------------------------------------------
+# 只跟踪整理好的成品与文档。
+#
+#   mods/   维护中的 mod（含每个 mod 的 data/assets.xml）
+#   docs/   参考资料与设计文档
+#   src/    工具链（anno 包）
+#   根目录的 build_*.py / edit_pools.py / query.py 是指挥这些库的入口
+#
+# 下面这些只在本机存在，不进 git。**都锚定仓库根目录**，
+# 免得 /data/ 把 mods/*/data/ 一起忽略掉。
+#
+#   /download/  下载来的原始文件（zip、exe）
+#   /tools/     解包出来的可执行与 PowerShell 辅助脚本
+#   /temp/      原始层：解包数据、卡表底稿、可研发清单、人看的档案
+#   /data/      解析层：一个资产一个 JSON（见 docs/data-model.md），可重建
+#   /old/       迁移归档：旧的聚合 JSON 与被替换的代码快照
+#   /saves/     本地存档备份（.a7s），含个人存档内容
+#   /anno.json  本机配置（游戏目录等），按 README 第〇节新建
+# ---------------------------------------------------------------------------
+/download/
+/tools/
+/temp/
+/data/
+/old/
+/saves/
+/anno.json
+
+# Windows / 编辑器 / Python 产生的杂项
+Thumbs.db
+desktop.ini
+.DS_Store
+*.tmp
+__pycache__/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Anno 1800 游戏生成的日志与缓存
+logs/
+*.log
