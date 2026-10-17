@@ -30,6 +30,7 @@ SPECIAL_PREFIXES: tuple[str, ...] = (
     "ResidenceUpgrade/NeedProvideNeedUpgrade",
     "PopulationUpgrade/InputBenefitModifier",
     "BuildingUpgrade/ReplacingWorkforce",
+    "PassiveTradeGoodGenUpgrade",
 )
 
 
@@ -80,6 +81,35 @@ BONUS_SPECS: tuple[Spec, ...] = (
     Spec("AttackableUpgrade/MaxHitpointsUpgrade/Value", "hitpoints", "耐久", group="ship"),
     Spec("AttackableUpgrade/SelfHealUpgrade/Value", "self_heal", "自愈", group="ship"),
     # 其他
+    Spec("PierUpgrade/PierSpeedUpgrade/Value", "pier_speed", "码头装卸速度", group="harbor"),
+    Spec("TradeShipUpgrade/LoadingSpeedUpgrade/Value", "trade_loading", "贸易船装卸速度", group="ship"),
+    Spec("TradeShipUpgrade/ActiveTradePriceInPercent", "trade_price", "贸易售价比例", group="ship"),
+    Spec("RepairCraneUpgrade/HealRadiusUpgrade/Value", "repair_radius", "修理半径", unit="", group="harbor"),
+    Spec("VisitorHarborUpgrade/SpawnProbabilityFactor/Value", "visitor_rate", "观光港刷新率", group="harbor"),
+    Spec("AttackerUpgrade/AccuracyUpgrade/Value", "accuracy", "命中", group="ship"),
+    Spec("AttackerUpgrade/ReloadTimeUpgrade/Value", "reload_time", "装填时间", group="ship"),
+    Spec("AttackerUpgrade/LineOfSightRangeUpgrade/Value", "sight", "视野", group="ship"),
+    Spec("FactoryUpgrade/NeededAreaPercentUpgrade/Value", "needed_area", "所需面积", group="production"),
+    Spec("ShipyardUpgrade/ConstructionCostInPercent", "ship_cost", "造船成本", group="harbor"),
+    # 打捞（老奈特）：稀有度权重 / 废料
+    Spec("DivingBellUpgrade/RarityWeightUpgrade/Rare/AdditionalWeight", "dive_rare", "打捞稀有度权重（Rare）", unit="", group="dive"),
+    Spec("DivingBellUpgrade/RarityWeightUpgrade/Epic/AdditionalWeight", "dive_epic", "打捞稀有度权重（Epic）", unit="", group="dive"),
+    Spec("DivingBellUpgrade/RarityWeightUpgrade/Legendary/AdditionalWeight", "dive_legendary", "打捞稀有度权重（Legendary）", unit="", group="dive"),
+    Spec("DivingBellUpgrade/ScrapAmountLevelUpgrade/Value", "scrap_amount", "打捞废料数量", unit="", group="dive"),
+    # 战斗：受伤 / 伤害系数（<1 = 更抗打；>1 = 打得更疼）
+    Spec("AttackableUpgrade/DamageReceiveFactor/Normal/Factor", "damage_taken", "受伤系数", unit="", group="ship"),
+    Spec("AttackableUpgrade/DamageReceiveFactor/Cannon/Factor", "damage_taken_cannon", "受炮击系数", unit="", group="ship"),
+    Spec("AttackableUpgrade/DamageReceiveFactor/BigBertha/Factor", "damage_taken_bertha", "受巨炮系数", unit="", group="ship"),
+    Spec("AttackableUpgrade/DamageReceiveFactor/Torpedo/Factor", "damage_taken_torpedo", "受鱼雷系数", unit="", group="ship"),
+    Spec("AttackerUpgrade/DamageFactor/SailShip/Factor", "damage_vs_sail", "对帆船伤害系数", unit="", group="ship"),
+    Spec("AttackerUpgrade/DamageFactor/Building/Factor", "damage_vs_building", "对建筑伤害系数", unit="", group="ship"),
+    Spec("AttackableUpgrade/SelfHealPausedTimeIfAttackedUpgrade/Value", "selfheal_pause", "受击后自愈暂停", unit="", group="ship"),
+    # 宫殿随从
+    Spec("BuildingUpgrade/ResolverUnitCountUpgrade/Value", "resolver_units", "随从数量", unit="", group="building"),
+    Spec("BuildingUpgrade/ResolverUnitDecreaseUpgrade/Value", "resolver_decrease", "随从减少", unit="", group="building"),
+    Spec("BuildingUpgrade/ResolverUnitMovementSpeedUpgrade/Value", "resolver_speed", "随从速度", group="building"),
+    # 北极疾病
+    Spec("IncidentInfectableUpgrade/IncidentArcticIllnessIncreaseUpgrade/Value", "arctic_illness", "极地疾病风险", group="incident"),
     Spec("EcoSystemProviderUpgrade/DeltaValueUpgrade/Value", "eco", "生态", group="misc"),
     Spec("IrrigationUpgrade/...", "irrigation", "灌溉", group="misc"),
 )
@@ -88,7 +118,7 @@ BONUS_SPECS = tuple(spec for spec in BONUS_SPECS if not spec.path.endswith("..."
 
 
 # ---------------------------------------------------------------------- 效果
-def effects(values: RawValues, names: Names) -> dict:
+def effects(values: RawValues, names: Names, pool_names=None) -> dict:
     """`Values` → 结构化效果。"""
     bonuses: list[dict] = []
     used: set[str] = set()
@@ -107,6 +137,7 @@ def effects(values: RawValues, names: Names) -> dict:
                         "ref": names.ref(guid), "crop": crop_name(names.label(guid))})
 
     bonuses += _population_benefits(values, names)
+    bonuses += _passive_goods(values, names, pool_names)
     for guid in values.all("BuildingUpgrade/ReplacingWorkforce"):
         bonuses.append({"key": "workforce_goods", "label": "劳动力替代", "group": "building",
                         "ref": names.ref(guid)})
@@ -120,6 +151,18 @@ def effects(values: RawValues, names: Names) -> dict:
         "need_substitutes": _need_substitutes(values, names),
         "other": _other(values, used),
     }
+
+
+def _passive_goods(values: RawValues, names: Names, pool_names) -> list[dict]:
+    """被动产出：每周期有 X% 概率从 GenPool 里产出一件商品（霍加斯/贸易站类）。"""
+    probability = values.get("PassiveTradeGoodGenUpgrade/GenProbability", "")
+    pool = values.get("PassiveTradeGoodGenUpgrade/GenPool", "")
+    if not probability and not pool:
+        return []
+    goods = list(pool_names(pool)) if pool and pool_names else []
+    return [{"key": "passive_goods", "label": "被动产出", "group": "production",
+             "value": util.number(probability) or 0, "unit": "%",
+             "pool": names.ref(pool) if pool else None, "goods": goods}]
 
 
 def _population_benefits(values: RawValues, names: Names) -> list[dict]:
@@ -194,11 +237,22 @@ def _need_substitutes(values: RawValues, names: Names) -> list[dict]:
     return out
 
 
+IGNORE_OTHER_PREFIXES: tuple[str, ...] = (
+    "ItemAction/", "ItemWithUI/", "ExpeditionAttribute/", "CultureUpgrade/ChangeModule",
+    "CultureUpgrade/AdditionalModuleSoundLoop", "CultureUpgrade/ForcedFeedbackVariation",
+    "CultureUpgrade/HideBuff", "CultureUpgrade/ItemSetUpgrade/Item/ItemSet",
+    "IndustrializableUpgrade/", "ShipyardUpgrade/AddAssemblyOptions/",
+    "DivingBellUpgrade/AllocationWeightUpgrade/",
+)
+
+
 def _other(values: RawValues, used: set[str]) -> list[dict]:
     """没归一化的数值叶子 —— 兜底，保证浏览器里不丢数据。"""
     other: list[dict] = []
     for path, raw in values.entries:
         if path in used or path.endswith("Percental"):
+            continue
+        if path.startswith(IGNORE_OTHER_PREFIXES):
             continue
         if any(path == prefix or path.startswith(prefix + "/") for prefix in SPECIAL_PREFIXES):
             continue
@@ -267,6 +321,7 @@ def summary(effect: dict, travel: dict | None = None, act: dict | None = None, l
         parts.append(f"{(item['product'] or {}).get('name', '原料')} 用量 {signed(item['amount'])}")
     for change in effect["replace_inputs"]:
         parts.append(f"{change['from']['name']} → {change['to']['name']}")
+
     for need in effect["need_consumption"]:
         parts.append(f"{(need['ref'] or {}).get('name', '需求')} 消耗 {signed(need['value'])}%")
     for change in effect.get("need_substitutes", []):
@@ -284,6 +339,9 @@ def summary(effect: dict, travel: dict | None = None, act: dict | None = None, l
 
 
 def _bonus_text(bonus: dict) -> str:
+    if bonus.get("key") == "passive_goods":
+        goods = "、".join(bonus.get("goods") or []) or "商品"
+        return f"每周期 {bonus['value']}% 概率被动产出（{goods}）"
     if "ref" in bonus:
         name = (bonus["ref"] or {}).get("name", "")
         return f"{bonus['label']}「{bonus.get('crop') or name}」" if name else bonus["label"]

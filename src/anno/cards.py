@@ -105,7 +105,8 @@ def build_one(index: AssetIndex, guid: str, row: dict, inputs: CardInputs,
         allocation = inputs.template_slots.get(template, "")
     scenario = (fields.get("ScenarioFilter", "") or "").strip()
     dlc = util.dedup(card.dlc) if card else []
-    effect = effects.effects(card.values if card else RawValues(), names)
+    effect = effects.effects(card.values if card else RawValues(), names,
+                             pool_names=_pool_names(index, names))
     travel = effects.expedition(card.values) if card else None
     act = effects.action(card.values, names) if card else None
     targets = targets_doc(index, card.targets if card else [], names)
@@ -163,6 +164,14 @@ def build_one(index: AssetIndex, guid: str, row: dict, inputs: CardInputs,
         "info_desc": fields.get("InfoDescription", ""),
         "flavor": inputs.texts.get(fields.get("InfoDescription", ""), ""),
     }
+
+
+def _pool_names(index: AssetIndex, names: Names):
+    """`GenPool` 这类商品池 -> 商品名列表（给被动产出用）。"""
+    def resolve(guid: str) -> list[str]:
+        pool = index.pools.get(guid)
+        return [names.label(item) for item in pool.items] if pool else []
+    return resolve
 
 
 def targets_doc(index: AssetIndex, targets: list[str], names: Names) -> dict:

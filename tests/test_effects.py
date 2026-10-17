@@ -84,6 +84,21 @@ def test_expedition_and_action() -> None:
     assert act["buff"]["name"] == "急救包"
 
 
+def test_pier_speed_and_passive_goods() -> None:
+    """霍加斯这类港口专家：码头装卸速度 + 被动产出（GenPool 解析成商品名）。"""
+    parsed = effects.effects(values(
+        ("PierUpgrade/PierSpeedUpgrade/Value", "100"),
+        ("PassiveTradeGoodGenUpgrade/GenProbability", "30"),
+        ("PassiveTradeGoodGenUpgrade/GenPool", "193483"),
+    ), FakeNames({"193483": "Trelawney Logistics"}), pool_names=lambda guid: ["咖啡", "金"])
+    keys = {bonus["key"] for bonus in parsed["bonuses"]}
+    assert {"pier_speed", "passive_goods"} <= keys
+    text = effects.summary(parsed)
+    assert "码头装卸速度 +100%" in text
+    assert "每周期 30% 概率被动产出（咖啡、金）" in text
+    assert parsed["other"] == []
+
+
 def test_no_effect_is_reported() -> None:
     assert effects.summary(effects.effects(values(), FakeNames({}))) == "（无直接数值效果）"
 

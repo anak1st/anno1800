@@ -235,7 +235,7 @@ docs/   展示层：`cards.md`、`cards-special.md` 全部从 data/ 读，不再
 }
 ```
 - 原版 9 位（含两个海盗）都有文件；海盗没有 mod 池时 `mod: null`。
-- 本 mod 池**不是从 `mods/` 读的**：收录范围见 `rules.in_mod()`（原版卖 ∪ 可研发 ∪ 可合成），归属见 `rules.mod_plan()`；`mods/all-items-unlocked/.../assets.xml` 是这条链的输出。
+- 本 mod 池**不是从 `mods/` 读的**：收录范围见 `rules.in_mod()`（原版卖 ∪ 可研发 ∪ 可合成，另加 `MANUAL_INCLUDES` 里 20 张人工审核的剧情/活动奖励），归属见 `rules.mod_plan()`；`mods/all-items-unlocked/.../assets.xml` 是这条链的输出。
 - 档位池 GUID 来自 `VANILLA_TIERS`，池展开结果用今天的 `AssetIndex.reach`。
 
 ### 4.9 `data/index.json` + `data/names.json`
