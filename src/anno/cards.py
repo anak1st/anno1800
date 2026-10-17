@@ -25,9 +25,16 @@ COL_PRICE = "TradePrice"
 COL_LINE_ID = "LineID"
 COL_ICON = "Icon"
 
-# 补录判据：有稀有度或售价 = 实物 / 可交易，不是纯任务道具
-SUPPLEMENT_FIELD_TAGS = ("Rarity", "TradePrice")
 NONE_SLOT = "none"
+
+# 「任务物件」判据：ItemWithUI 且带这两个动作之一 —— 游戏自己就是这么标的，
+# 比按名字猜可靠（被囚禁的动物、可阅读的书、密封信件都是这种）。
+QUEST_ACTION_PATHS: tuple[str, ...] = ("/ActionStartQuest", "/ActionTriggerTextBook")
+
+
+def is_quest_object(values) -> bool:
+    """这个 ItemWithUI 是不是「点一下触发任务 / 阅读」的任务物件。"""
+    return any(marker in path for path, _value in values.entries for marker in QUEST_ACTION_PATHS)
 
 
 @dataclass
@@ -40,37 +47,42 @@ class CardInputs:
     texts: dict[str, str]                  # 中文文本表
 
 
-def load_inputs(index: AssetIndex, *, verbose: bool = True) -> CardInputs:
-    """读卡表底稿，把底稿漏掉的实物卡补录进来（继承写法的变体）。"""
+def load_inputs(index: AssetIndex, *, research: set[str] | None = None,
+                verbose: bool = True) -> CardInputs:
+    """卡牌范围 = 扫描出来的卡（`ITEM_TPL` 模板 + `<BaseAssetGUID>` 继承变体）。
+
+    `research` 是可研发的 GUID 集合；不传就从 `temp\research-cards.txt` 读（兼容旧用法，
+    正式流程由 `build_db.py` 现场算好传进来，不依赖那个文件）。
+    """
     from . import templates, texts
 
-    rows = util.read_tsv(paths.CARD_TABLES)
     zh = texts.load_zh()
-    research = ({line.strip() for line in paths.RESEARCH_CARDS.read_text(encoding="utf-8").split()}
-                if paths.RESEARCH_CARDS.is_file() else set())
-    added = supplement_rows(index, rows, zh)
-    if verbose and added:
-        for guid in added:
-            print(f"  补录 {guid} {index.cards[guid].name}（XML 里有、card-tables.tsv 里没有）")
+    if research is None:
+        research = ({line.strip() for line in paths.RESEARCH_CARDS.read_text(encoding="utf-8").split()}
+                    if paths.RESEARCH_CARDS.is_file() else set())
+    rows = rows_from_index(index, zh)
+    if verbose:
+        print(f"  卡牌 {len(rows)} 张（模板 + 继承变体，来自扫描）")
     return CardInputs(rows=rows, template_slots=templates.default_slots(), research=research, texts=zh)
 
 
-def supplement_rows(index: AssetIndex, rows: dict, texts: dict) -> list[str]:
-    """把底稿漏掉的实物卡按 XML 补一行（原地改 rows），返回补了哪些。"""
-    added: list[str] = []
-    for guid, card in index.cards.items():
-        if guid in rows:
-            continue
-        if not any(card.fields.get(tag) for tag in SUPPLEMENT_FIELD_TAGS):
-            continue
-        rows[guid] = {COL_TEMPLATE: card.tpl, COL_EN: card.en, COL_INTERNAL: card.name,
-                      COL_ZH: texts.get(guid, ""), COL_RARITY: card.fields.get("Rarity", ""),
-                      COL_ALLOCATION: card.fields.get("Allocation", ""),
-                      COL_PRICE: card.fields.get("TradePrice", ""),
-                      COL_LINE_ID: card.fields.get("LineID", ""),
-                      COL_ICON: card.fields.get("IconFilename", "")}
-        added.append(guid)
-    return added
+def rows_from_index(index: AssetIndex, zh: dict[str, str]) -> dict[str, dict[str, str]]:
+    """卡字段从扫描结果来：`ItemCard` 的字段 + `texts_chinese.xml` 的中文名。"""
+    return {
+        guid: {
+            COL_TEMPLATE: card.tpl,
+            COL_EN: card.en,
+            COL_INTERNAL: card.name,
+            COL_ZH: zh.get(guid, ""),
+            COL_RARITY: card.fields.get("Rarity", ""),
+            COL_ALLOCATION: card.fields.get("Allocation", ""),
+            COL_TYPE: card.fields.get("ItemType", ""),
+            COL_PRICE: card.fields.get("TradePrice", ""),
+            COL_LINE_ID: card.fields.get("LineID", ""),
+            COL_ICON: card.fields.get("IconFilename", ""),
+        }
+        for guid, card in index.cards.items()
+    }
 
 
 # ---------------------------------------------------------------------- 生成
@@ -100,9 +112,10 @@ def build_one(index: AssetIndex, guid: str, row: dict, inputs: CardInputs,
     zh = inputs.texts.get(guid, "") or row.get(COL_ZH, "")
     rarity = (row.get(COL_RARITY, "") or "").strip() or infer_rarity(index, guid)
 
+    quest_object = bool(card and is_quest_object(card.values))
     slots = SimpleNamespace(template=template, zh=zh, en=row.get(COL_EN, ""),
                             internal=row.get(COL_INTERNAL, ""), scenario=scenario,
-                            allocation=allocation, rarity=rarity)
+                            allocation=allocation, rarity=rarity, quest_object=quest_object)
     place = placement.place(slots)
     vanilla = own.get("vanilla", [])
     mod = own.get("mod", [])
@@ -123,6 +136,7 @@ def build_one(index: AssetIndex, guid: str, row: dict, inputs: CardInputs,
         "item_set": names.ref(card.item_set) if card and card.item_set else None,
         "scenario": scenario or None,
         "exclusive": fields.get("ExclusiveGroup", "") or None,
+        "quest_object": quest_object,
         "blocks": card.blocks if card else [],
         "effects": effect,
         "expedition": travel,
@@ -239,6 +253,7 @@ class CardView:
     place: str = ""
     big: str = ""
     summary: str = ""
+    quest_object: bool = False
 
     @classmethod
     def from_doc(cls, doc: dict) -> CardView:
@@ -268,9 +283,23 @@ class CardView:
             place=(doc.get("categories") or {}).get("place", ""),
             big=(doc.get("categories") or {}).get("big", ""),
             summary=doc.get("summary", ""),
+            quest_object=bool(doc.get("quest_object")),
         )
 
     # 兼容旧渲染代码的只读属性
     @property
     def sell_names(self) -> list[str]:
         return self.sell_mod or self.sell_vanilla
+
+def attach_mod_owners(docs: dict[str, dict], mod_refs: dict[str, list[dict]]) -> None:
+    """把规则算出来的 mod 归属写回卡文档（`owners.mod` / `in_mod`）。
+
+    `mod_refs` 是 `{卡 GUID: [{id, name}]}`，由 `build_db.py` 从 `rules.mod_plan`
+    转成商人引用后传进来 —— 因此 data/ 与文档只依赖规则，不依赖 mod 的 XML。
+    """
+    for guid, refs in mod_refs.items():
+        doc = docs.get(guid)
+        if doc is None:
+            continue
+        doc["owners"]["mod"] = refs
+        doc["owners"]["in_mod"] = bool(refs)

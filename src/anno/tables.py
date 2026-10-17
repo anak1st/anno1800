@@ -73,6 +73,7 @@ TRADERS: dict[str, tuple[str, str, tuple[str, ...]]] = {
     "192071": ("拉福图", "Jean La Fortune", (ZONE_COLONY,)),      # 海盗
 }
 TRADER_BY_NAME: dict[str, str] = {name: guid for guid, (name, _en, _zone) in TRADERS.items()}
+TRADER_ZONE_LABEL: dict[str, str] = {"老奈特": "崔老妮海角 / 北极"}   # 比「旧世界+北极」更贴切
 VANILLA_LABEL: dict[str, str] = {"安·哈洛": "海盗", "拉福图": "海盗"}   # 卡表里两个海盗合并显示
 
 # 商人 Profile 资产（`<Values><Trader>` 所在的那个资产）—— 商人文档的 ID 用它

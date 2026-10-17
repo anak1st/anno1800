@@ -18,6 +18,7 @@ class FakeCard:
     scenario: str = ""
     allocation: str = ""
     rarity: str = ""
+    quest_object: bool = False
 
 
 def test_slot_comes_from_allocation() -> None:
@@ -43,6 +44,13 @@ def test_item_with_ui_splits_by_name() -> None:
     assert placement.place(FakeCard(template="ItemWithUI", zh="未找回的配方")) == "任务道具"
     assert placement.place(FakeCard(template="ItemWithUI", zh="黑胶唱片：大河")) == "黑胶唱片"
     assert placement.place(FakeCard(template="ItemWithUI", zh="随便什么东西")) == "无装槽的其他物品"
+
+
+def test_quest_objects_are_quest_items() -> None:
+    """ItemWithUI + 触发任务/阅读动作（游戏字段）→ 任务道具，不靠名字猜。"""
+    assert placement.place(FakeCard(template="ItemWithUI", zh="被囚禁的海豚",
+                                    quest_object=True)) == "任务道具"
+    assert placement.place(FakeCard(template="ItemWithUI", zh="被囚禁的海豚")) == "无装槽的其他物品"
 
 
 def test_decorations_are_dropped() -> None:

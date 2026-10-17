@@ -19,7 +19,7 @@ from collections import Counter
 import typer
 from rich.table import Table
 
-from anno import database, paths, pools, rules, scan, texts, util
+from anno import database, paths, pools, rules, scan, texts, traders, util
 from anno.console import console
 
 app = typer.Typer(add_completion=False, no_args_is_help=True,
@@ -158,17 +158,26 @@ def exclusive(who: str = typer.Argument(..., help="商人名"),
 
 @app.command()
 def assign(restore: list[str] = typer.Argument(None, help="额外放回 mod 的 GUID"),
+           keep: bool = typer.Option(False, "--keep", help="以文件现有内容为基础（默认从规则重建）"),
            dry_run: bool = DRY_RUN) -> None:
-    """按规则重排全部卡池（先看 --dry-run 的流动明细）。"""
+    """按规则重建全部卡池（默认不含文件里的旧内容；--keep 才在旧内容上加）。"""
     text, pool_map, cards = load()
     index = scan.scan(paths.VANILLA_ASSETS, verbose=False)
     names = texts.Names(texts.load_zh(), lambda guid: index.field(guid, "name"))
-    current = {entry.guid: name for name, entries in pool_map.items() for entry in entries}
-    base = sorted(set(current) | set(restore or []), key=util.as_int)
+    current_owners: dict[str, set[str]] = {}
+    for name, entries in pool_map.items():
+        for entry in entries:
+            current_owners.setdefault(entry.guid, set()).add(name)
+    current = {guid: "、".join(traders.order_names(names)) for guid, names in current_owners.items()}
+    if keep:
+        base = sorted(set(current_owners) | set(restore or []), key=util.as_int)
+    else:
+        base = sorted({guid for guid, card in cards.items() if rules.in_mod(card)} | set(restore or []),
+                      key=util.as_int)
     decisions = rules.plan(index, cards, base, names)
 
     for guid in (g for g in base if g not in decisions):
-        console.print(f"  [yellow]{guid} {name_of(cards, guid)} 没有匹配的规则，留在原处[/]")
+        console.print(f"  [yellow]{guid} {name_of(cards, guid)} 没有匹配的规则，跳过（不进卡池）[/]")
 
     view = Table("规则", "商人", "张数")
     counts = Counter((d.rule, merchant) for d in decisions.values() for merchant in d.merchants)
@@ -178,18 +187,23 @@ def assign(restore: list[str] = typer.Argument(None, help="额外放回 mod 的 
 
     flow = Counter()
     for guid, decision in decisions.items():
-        was = current.get(guid)
+        was = current_owners.get(guid, set())
         for merchant in decision.merchants:
-            if merchant != was:
-                flow[(was or "（新增）", merchant)] += 1
-        if was and was not in decision.merchants:
-            flow[(was, "（移出）")] += 1
+            if merchant not in was:
+                flow[(current.get(guid) or "（新增）", merchant)] += 1
+        for merchant in was - set(decision.merchants):
+            flow[(merchant, "（移出）")] += 1
     moves = Table("从", "到", "张数")
     for (src, dst), count in flow.most_common():
         moves.add_row(src, dst, str(count))
     moves.add_row("[bold]合计[/]", "", f"[bold]{sum(flow.values())}[/]")
     console.print(moves)
 
+    dropped = [guid for guid in current_owners if guid not in decisions]
+    if dropped:
+        console.print(f"  [yellow]移出池子 {len(dropped)} 张："
+                      + "、".join(name_of(cards, guid) for guid in dropped[:12])
+                      + ("…" if len(dropped) > 12 else "") + "[/]")
     dual = [guid for guid, d in decisions.items() if len(d.merchants) > 1]
     entries = sum(len(d.merchants) for d in decisions.values())
     console.print(f"  现有池内 {len(current)} 张 ｜ 重排后 {len(decisions)} 张"
@@ -201,8 +215,7 @@ def assign(restore: list[str] = typer.Argument(None, help="额外放回 mod 的 
     if dry_run:
         console.print("  --dry-run：不写文件")
         return
-    owners = {guid: (decisions[guid].merchants if guid in decisions else (current[guid],))
-              for guid in base}
+    owners = {guid: decisions[guid].merchants for guid in base if guid in decisions}
     pools.apply_assignment(pool_map, owners)
     save(text, pool_map, cards)
 

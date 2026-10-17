@@ -4,6 +4,7 @@ Anno 1800（Steam appid `916440`）的 mod 备份与索引。游戏安装位置�
 
 ```
 Anno1800\
+├── scripts\     链路脚本（进 git）：解包游戏数据
 ├── src\anno\    工具链（唯一一个包，从零重写）：paths / scan / model / effects / cards / entities /
 │                traders / database / render / pools / rules / research / placement / tables
 ├── tests\       单元测试（pytest，只测纯函数）
@@ -23,7 +24,7 @@ Anno1800\
 │   ├── AssetViewer.exe          资产浏览器（GUI）
 │   └── old\                     封存的原始素材与未采用版本
 ├── tools\       解包出来的可执行 + PowerShell 脚本（不进 git）
-├── temp\        原始层：解包数据、卡表底稿、人看的档案（不进 git，见 temp\README.md）
+├── temp\        原始层：解包数据、可研发清单、人看的档案（不进 git，见 temp\README.md）
 ├── saves\       本地存档备份（.a7s，见 saves\README.md，不进 git）
 └── README.md    本文件
 ```
@@ -40,7 +41,7 @@ Anno1800\
 | `tests\` | 单元测试 | ✅ |
 | `download\` | **下载来的原始文件** —— zip、exe、封存素材 | ❌ |
 | `tools\` | 解包出来的可执行与 PowerShell 脚本 | ❌ |
-| `temp\` | **原始层** —— 解包出的 `assets.xml`、卡表底稿、可研发清单、档案表（说明见 `temp\README.md`） | ❌ |
+| `temp\` | **原始层** —— 解包出的 `assets.xml`、可研发清单、档案表（说明见 `temp\README.md`） | ❌ |
 | `data\` | **解析层** —— 一个资产一个 JSON（`cards/` `buildings/` `goods/` …），可重建 | ❌ |
 | `old\` | **迁移归档** —— 旧的 4 个聚合 JSON、被替换的代码快照（说明见 `old\README.md`） | ❌ |
 | `saves\` | **本地存档备份** —— `accounts\` 下的 `.a7s`（说明见 `saves\README.md`） | ❌ |
@@ -53,7 +54,7 @@ Anno1800\
 
 ## 〇、全流程（从零到能查）
 
-数据分三层，命令沿着三层走：
+**单向流程**：游戏本体 → `temp\`（解包）→ 代码分析 → `data\` → 文档；**mod 的 `assets.xml` 是这条链最后的输出**，解析时不读它。
 
 ```
 <game_dir>   --RdaConsole-->  temp\db\…        原始：解包出的 assets.xml / texts_*.xml
@@ -66,50 +67,43 @@ data\        --edit_pools.py--> mods\…\assets.xml  改卡池，再把 mods\ �
 | 步 | 命令 | 作用 | 产物 | 耗时 |
 |---|---|---|---|---|
 | 0 | 新建 `anno.json`（内容见「配置」） | 填 `game_dir`（游戏安装目录） | `anno.json`（不进 git） | — |
-| 1 | `RdaConsole extract`（见第五节的完整命令） | 解包游戏数据 | `temp\db\data\config\…`（约 296 MB） | ~3 分钟 |
-| 2 | `tools\build-card-db.ps1` | 生成卡表底稿（**决定哪些资产算卡**） | `temp\card-tables.tsv` | 数秒 |
-| 3 | `uv run build_research.py` | 研发展开（四层递归） | `temp\research-cards.txt` | ~4 s |
-| 4 | `uv run build_db.py` | **一次扫描 XML → JSON 数据库** | `data\` | ~6 s |
-| 5 | `uv run build_cards.py` | 渲染文档 | `docs\cards.md`、`temp\merchant-pools.md` | 0.3 s |
-| 6 | `uv run build_profile.py` | 人看的档案 | `temp\card-profile.tsv` | 0.3 s |
-| 7 | `uv run query.py card 香料大师` | 查一张卡的作用 | 终端 | <1 s |
-| 8 | `uv run edit_pools.py report` | 看卡池现状（大小 / 重复 / 双挂） | 终端 | <1 s |
-| 9 | `uv run edit_pools.py assign --dry-run` | 按规则重排卡池，先看流动明细 | 终端 | ~6 s |
-| 10 | `uv run edit_pools.py assign` | 真正写回 | `mods\all-items-unlocked\…\assets.xml` | ~6 s |
-| 11 | 复制 `mods\` 到 `<game_dir>\mods\` | 让游戏加载 | — | — |
-| 12 | 启动游戏看 `%USERPROFILE%\Documents\Anno 1800\log\mod-loader.log` | 验证 | 12 行 `Load …` + `Loading complete` | — |
+| 1 | `pwsh scripts\extract-game-data.ps1` | 解包游戏数据（调用 RdaConsole） | `temp\db\data\config\…`（约 296 MB） | ~3 分钟 |
+| 2 | `uv run build_research.py` | 研发展开（四层递归） | `temp\research-cards.txt` | ~4 s |
+| 3 | `uv run build_db.py` | **一次扫描 XML → JSON 数据库**（卡牌范围由模板定义） | `data\`（约 3100 个文件） | ~6 s |
+| 4 | `uv run build_cards.py` | 渲染文档 | `docs\cards.md`、`temp\merchant-pools.md` | 0.3 s |
+| 5 | `uv run build_profile.py` | 人看的档案 | `temp\card-profile.tsv` | 0.3 s |
+| 6 | `uv run query.py card 香料大师` | 查一张卡的作用 | 终端 | <1 s |
+| 7 | `uv run edit_pools.py report` | 看卡池现状（大小 / 重复 / 双挂） | 终端 | <1 s |
+| 8 | `uv run edit_pools.py assign --dry-run` | 按规则重排卡池，先看流动明细（应显示 0 移动） | 终端 | ~6 s |
+| 9 | `uv run edit_pools.py assign` | **按规则重建卡池**（收录范围 + 归属，默认不读旧内容；`--keep` 才基于现有文件） | `mods\all-items-unlocked\…\assets.xml` | ~6 s |
+| 10 | 复制 `mods\` 到 `<game_dir>\mods\` | 让游戏加载 | — | — |
+| 11 | 启动游戏看 `%USERPROFILE%\Documents\Anno 1800\log\mod-loader.log` | 验证 | 12 行 `Load …` + `Loading complete` | — |
 
-第 1–6 步的完整命令（复制即用，`game_dir` / `temp_dir` 都从 `anno.json` 取）：
+第 1–5 步的完整命令（复制即用，`game_dir` / `temp_dir` 都从 `anno.json` 取）：
 
 ```powershell
-# 1. 解包（首次安装、换游戏版本时跑一次）
-$cfg = Get-Content anno.json | ConvertFrom-Json
-& 'tools\RdaConsole\build\RdaConsole.exe' extract `
-    -f (Get-ChildItem (Join-Path $cfg.game_dir 'maindata\data*.rda') | ForEach-Object FullName) `
-    -o (Join-Path $cfg.temp_dir 'db') --filter 'config[/\\].*\.(xml|json)$' -y -n
+# 1. 解包（首次安装、换游戏版本时跑一次；路径从 anno.json 取）
+pwsh scripts\extract-game-data.ps1
 
-# 2. 卡表底稿（决定哪些资产算卡，改卡表范围时才需要重跑）
-& 'tools\build-card-db.ps1'
-
-# 3. 研发展开 -> temp\research-cards.txt
+# 2. 研发展开 -> temp\research-cards.txt
 uv run build_research.py
 
-# 4. 一次扫描 -> data\（一个资产一个 JSON）
+# 3. 一次扫描 -> data\（一个资产一个 JSON）
 uv run build_db.py
 
-# 5. 文档 -> docs\cards.md + temp\merchant-pools.md
+# 4. 文档 -> docs\cards.md + temp\merchant-pools.md
 uv run build_cards.py
 
-# 6. 人看的档案 -> temp\card-profile.tsv
+# 5. 人看的档案 -> temp\card-profile.tsv
 uv run build_profile.py
 ```
 
 几条规则：
 
-- **只改归类 / 归属规则 / 排版** → 不用重跑 1–4，跑 `build_db.py`（改规则/归类会影响 data）或只跑 `build_cards.py`（只改排版）。
+- **只改归类 / 归属规则 / 排版** → 不用重跑 1–2（解包、研发）；改归类/规则跑 `build_db.py`，只改排版跑 `build_cards.py`。
 - **只查数据** → `data\` 已存在就够，`query.py` 不读 XML。
 - **改了 mod 卡池**（`edit_pools.py`）→ 重跑 `build_db.py` + `build_cards.py`，再把 `mods\` 同步进游戏。
-- `data\`、`temp\`、`old\` 都不进 git：新克隆的仓库要先走 1–4 才能用 `query.py`。
+- `data\`、`temp\`、`old\` 都不进 git：新克隆的仓库要先走 1–3 才能用 `query.py`。
 
 ### 配置（`anno.json`）
 
@@ -354,31 +348,37 @@ download\
     └── mods-public-service-range\ 公共服务建筑距离的原始 zip
 ```
 
-### `tools\` —— 解包工具与脚本（不进 git）
+### `scripts\` —— 链路脚本（进 git）
+
+```
+scripts\
+├── extract-game-data.ps1   解包 <game_dir>\maindata\data*.rda -> temp\db（调用 RdaConsole）
+```
+
+脚本从 `anno.json` 取路径；`extract-game-data.ps1` 支持 `-DryRun` 只打印命令、`-Out` / `-Filter` 用于试跑。
+
+### `tools\` —— 二进制与一次性分析脚本（不进 git）
 
 ```
 tools\
-├── RdaConsole\build\RdaConsole.exe   RdaConsole.zip 解压出来的可执行
-├── build-card-db.ps1                 生成卡牌基础表（temp\card-tables.tsv）
+├── RdaConsole\build\RdaConsole.exe   RdaConsole.zip 解压出来的可执行（解包用）
 ├── compare-pools.ps1                 原版池 vs mod 池对比（一次性分析用）
-├── extract-researchable.ps1          研发展开（一次性分析用）
+├── extract-researchable.ps1          研发展开（已被 build_research.py 取代）
 ├── lookup-guids.ps1                  反查 mod 用到的 GUID 名称与原版数值
 └── lookup-items.ps1                  反查 mod 引用的物品
 ```
 
 ### `temp\` —— 原始层（不进 git）
 
-`db\`（解包出的游戏数据，约 296 MB）、`card-tables.tsv`（卡表底稿）、`research-cards.txt`（可研发清单）、
+`db\`（解包出的游戏数据，约 296 MB）、`research-cards.txt`（可研发清单）、
 `card-profile.tsv`（人看的档案）、`merchant-pools.md`（各家商人卡池大小）。
 解析好的数据在 `data\`，不在 `temp\`。
 **完整说明与重新生成步骤见 [`temp\README.md`](temp\README.md)。**
 
 ```powershell
-# 一条链：解包 -> 卡表底稿 -> 研发展开 -> data/ -> 文档
-$cfg = Get-Content anno.json | ConvertFrom-Json
-& 'tools\RdaConsole\build\RdaConsole.exe' extract `
-    -f (Get-ChildItem (Join-Path $cfg.game_dir 'maindata\data*.rda') | ForEach-Object FullName) `
-& 'tools\build-card-db.ps1'
+# 一条链：解包 -> 研发展开 -> data/ -> 文档
+pwsh scripts\extract-game-data.ps1
+
 uv run build_research.py     # -> temp\research-cards.txt
 uv run build_db.py           # -> data\（一个资产一个 JSON）
 uv run build_cards.py        # -> docs\cards.md + temp\merchant-pools.md

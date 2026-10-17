@@ -162,3 +162,17 @@ def plan(index: AssetIndex, cards: dict, guids, names: Names) -> dict[str, Decis
         if decision is not None:
             result[guid] = decision
     return result
+
+# ---------------------------------------------------------------- 本 mod 的收录范围
+# 只按游戏结构判：**原版商人卖 / 研究所可研发 / 老奈特可合成**。
+# 剧情、活动、战役奖励（Narrative 稀有度、无售价、原版也没人卖的那种）**不进池子** ——
+# 它们在游戏里本来就不该由商人出售。
+def in_mod(card) -> bool:
+    """这张卡该不该被本 mod 卖（只看游戏结构，不看任何名单/文件）。"""
+    return bool(card.sell_vanilla) or card.researchable or card.craftable
+
+def mod_plan(index: AssetIndex, cards: dict, names: Names) -> dict[str, tuple[str, ...]]:
+    """`{卡 GUID: 挂给哪几家}` —— 收录范围 + 规则归属，一次算好。"""
+    wanted = [guid for guid, card in cards.items() if in_mod(card)]
+    decisions = plan(index, cards, wanted, names)
+    return {guid: decision.merchants for guid, decision in decisions.items()}

@@ -110,6 +110,8 @@ def place(card) -> str | None:
             return "黑胶唱片"
         if RE_BLUEPRINT.search(both) or RE_LETTER.search(both) or RE_CRATE.search(both):
             return "任务道具"
+        if getattr(card, "quest_object", False):
+            return "任务道具"          # ItemWithUI 且带「触发任务 / 阅读」动作
         return "无装槽的其他物品"
     if tpl in DROP_TPL:
         return None

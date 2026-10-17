@@ -156,7 +156,8 @@ def header(name: str, entries: list[PoolEntry], cards: dict) -> str:
     counts = Counter(placement.big_of(place_of(entry.guid, cards)) for entry in entries)
     parts = "、".join(f"{big} {count}" for big, count in
                       sorted(counts.items(), key=lambda item: placement.bigkey(item[0])))
-    return f"\t<!-- {name}（{en}） - {tables.zones_zh(zones)} | 共 {len(entries)} 项：{parts} -->"
+    zone = tables.TRADER_ZONE_LABEL.get(name) or tables.zones_zh(zones)
+    return f"\t<!-- {name}（{en}） - {zone} | 共 {len(entries)} 项：{parts} -->"
 
 
 def place_of(guid: str, cards: dict) -> str:

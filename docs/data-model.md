@@ -10,7 +10,6 @@
 ```
 temp/   原始层（不进 git）
 ├── db/...assets.xml          解包出的原始游戏数据
-├── card-tables.tsv           卡表底稿（范围由它定）
 ├── research-cards.txt        可研发清单
 └── card-profile.tsv          人看的档案（由 data 渲染）
 
@@ -41,7 +40,7 @@ docs/   展示层：`cards.md`、`cards-special.md` 全部从 data/ 读，不再
 
 | 概念 | 游戏里怎么认 | 数量 | 与本设计的关系 |
 |---|---|---|---|
-| **卡（物品）** | `Template ∈ ITEM_TPL`（GuildhouseItem / TownhallItem / HarborOfficeItem / ShipSpecialist / CultureItem / VehicleItem / ItemWithUI…） | 表内 **2149**（扫描出 2154，含 2 张继承变体） | **核心** |
+| **卡（物品）** | `Template ∈ ITEM_TPL`（GuildhouseItem / TownhallItem / HarborOfficeItem / ShipSpecialist / CultureItem / VehicleItem / ItemWithUI…）+ `<BaseAssetGUID>` 继承变体 | **2154**（卡表底稿已弃用，范围由扫描直接定义） | **核心** |
 | **作用目标组** | `Template = ItemEffectTargetPool`，成员在 `EffectTargetGUIDs` | **194**（全部有成员） | 卡的目标常指向它（564 次引用，79 个被用到） |
 | **建筑** | `Template` 含 `Building`/`Farm`/`Factory`/`Mall`/`Restaurant`/`WarShip`… | 卡牌目标展开后 **447 座** | 卡的目标落点；有产线信息 |
 | **商品** | `Template = Product` | 全库 656，卡牌引用 **173** | 配方 / 额外产出 / 换原料 / 需求 |
@@ -49,7 +48,7 @@ docs/   展示层：`cards.md`、`cards-special.md` 全部从 data/ 读，不再
 | **物品套装** | `Template = ItemSet` | 44（32 个被卡牌引用） | 卡的 `Item/ItemSet` |
 | **DLC** | `Template = UplayProduct` | 86，卡牌引用 **9** | `Locked/DLCDependency` |
 | **Buff** | `Template` 以 Buff 结尾（VehicleBuff / GuildhouseBuff / TownhallBuff），由 ItemAction/ActiveBuff 引用 | 约 **124**（133 个被引用，含少量噪声） | **入库**：使用型道具的「用了会得到什么」 |
-| **商人** | `<Values><Trader>` + `Profile_3rdParty*` | 27 个带 `<Trader>`，其中 **9 位卖卡** | 原版档位池 + 本 mod 池 |
+| **商人** | `<Values><Trader>` + `Profile_3rdParty*` | 27 个带 `<Trader>`，其中 **9 位卖卡** | 原版档位池（游戏）+ 本 mod 池（规则算） |
 | **远征** | `ExpeditionAttribute`（属性/难度/区域） | 属性 20 种、难度 3 种、区域 10 种 | 嵌在卡里，不单独建文件 |
 | **使用动作** | `ItemAction` | 10 种（HEAL_INCIDENT / PLACE_MINE / KAMIKAZE…） | 嵌在卡里 |
 | **商店分类** | `Product/ProductCategory` → `Text` 资产 | 11 类（资源 / 加工品 / 基本需求 / 奢侈品 / 建设材料 / 商业需求…） | 写进商品文件 |
@@ -62,7 +61,7 @@ docs/   展示层：`cards.md`、`cards-special.md` 全部从 data/ 读，不再
 
 | 项 | 约定 |
 |---|---|
-| 文件名 | `<GUID>.json`，GUID 用游戏内十进制 ID（与 `texts`、`card-tables.tsv` 一致） |
+| 文件名 | `<GUID>.json`，GUID 用游戏内十进制 ID（与 `texts`、游戏资产一致） |
 | 编码 | UTF-8 无 BOM，`indent=2`，`ensure_ascii=false`（能直接读） |
 | 每个文件必备 | `id`、`type`、`name`（`{zh, en?, internal}`） |
 | 引用 | 一律 `{"id": "...", "name": "..."}`：**ID 是权威，name 是冗余的显示名**（避免查文件时还要 join） |
@@ -236,6 +235,7 @@ docs/   展示层：`cards.md`、`cards-special.md` 全部从 data/ 读，不再
 }
 ```
 - 原版 9 位（含两个海盗）都有文件；海盗没有 mod 池时 `mod: null`。
+- 本 mod 池**不是从 `mods/` 读的**：收录范围见 `rules.in_mod()`（原版卖 ∪ 可研发 ∪ 可合成），归属见 `rules.mod_plan()`；`mods/all-items-unlocked/.../assets.xml` 是这条链的输出。
 - 档位池 GUID 来自 `VANILLA_TIERS`，池展开结果用今天的 `AssetIndex.reach`。
 
 ### 4.9 `data/index.json` + `data/names.json`
@@ -294,7 +294,7 @@ uv run build_research.py # assets.xml -> temp/research-cards.txt（原始层，�
 ```
 
 - `build_data.py` **删除**，由 `build_db.py` 取代。
-- `edit_pools.py` 改读 `data/cards/*.json`（卡表范围与售价不变，只是来源变了）；`assign` 仍然扫 XML（后续可加扫描缓存，不在本次范围）。
+- `edit_pools.py` 从 `data/cards/*.json` 取卡、从 `rules` 取归属；`assign` 默认**从规则重建**卡池（`--keep` 才基于现有文件），扫 XML 只为算目标区域。
 - `docs/cards.md` 的「Mod / 原版商人 / 用途」列由 `owners` + `targets.usage` 渲染，**不再从 temp 读任何 JSON**。
 
 ---
@@ -343,7 +343,7 @@ uv run query.py show 114452          # 不知道类型时自动识别
 
 ## 8. 验收标准
 
-1. 计数对得上：`cards 2149 / buildings 447 / target-groups 79 / goods 212 / fertilities 30 / item-sets 44 / dlc 9 / traders 9 / buffs 120`，写进 `index.json`（`build_db.py` 自动写）。
+1. 计数对得上：`cards 2154 / buildings 447 / target-groups 79 / goods 212 / fertilities 30 / item-sets 44 / dlc 9 / traders 9 / buffs 120`，写进 `index.json`（`build_db.py` 自动写）。
 2. **文档零回归**：`docs/cards.md` 除"用途"列会带上更细的区域分组外，逐行与现在一致（用 diff 验证）。
 3. 7 张跨区卡的 `owners.mod` 是 `柯提马 + 萨曼托`，`targets.zones` 是 `["Africa","Colony01"]`。
 4. `query.py card 125131` 的输出里，效果数值与游戏 XML 一致（人工抽检 10 张）。

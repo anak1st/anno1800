@@ -58,7 +58,6 @@ DATA_INDEX = DATA / "index.json"       # 清单：schema、统计、目录说明
 DATA_NAMES = DATA / "names.json"       # 名字 -> (概念, ID)，给 CLI 反查
 
 # ---------------------------------------------------------------- 原始层的底稿与产物
-CARD_TABLES = TEMP / "card-tables.tsv"        # 卡表底稿：唯一决定「哪些算卡」
 RESEARCH_CARDS = TEMP / "research-cards.txt"  # 可研发清单
 CARD_PROFILE = TEMP / "card-profile.tsv"      # 人看的档案（由 data/ 渲染）
 MERCHANT_POOLS_MD = TEMP / "merchant-pools.md"  # 各商人卡池大小（由 data/ 渲染）
