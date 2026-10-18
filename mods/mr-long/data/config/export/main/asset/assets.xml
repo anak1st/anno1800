@@ -1,87 +1,143 @@
 <ModOps>
+    <!-- ==================================================================
+         mr-long ｜ 两张「传销头子」卡
+         ··················································
+         卡一  1400000006  工会卡      装槽继承 GuildhouseItem 默认值 GuildHouse
+         卡二  1400000008  北极小屋卡  在 Item 里显式写 Allocation=Lodge
+
+         GUID 号段 1400000006 ~ 1400000009 是本 mod 自己占的本地号段（一张卡一对：名称 + 简介），
+         游戏原版没有这几个编号（已对 assets.xml 全库查过）。
+
+         两张卡都靠 addNextSibling 插到原版物品 191388 后面：
+         191388 是原版一张现成的 GuildhouseItem，位置稳定，不会被别的 mod 挪走。
+
+         加载顺序：modinfo.json 里写了 LoadAfterIds = local-all-items-unlocked。
+         原因见根 README 第二节：all-items-unlocked 会整段 replace 商人的
+         /Values/RewardPool，本 mod 往它的子节点 ItemsPool 里 add，
+         必须后加载，否则加进去的卡会被随后整个替换掉（游戏不报警）。
+         ================================================================== -->
+
+    <!-- ==================================================================
+         卡一：传销头子（工会 / GuildHouse）  GUID 1400000006
+         ··················································
+         效果：生产力 +300%、维护费/人力 −75%、四类事故 −99%、自带电力、
+               远征：男性 + 外交 20 + 催眠师
+         作用：旧世界 / 新世界 / 安贝沙的生产建筑（目标组见下方 ItemEffect）。
+               注意：这些目标组都不含北极，所以这张卡在北极没有产能加成。
+         来源：原版物品 192450「说服者法瑞斯·阿瑟雷密」（史诗，+50%）的传奇强化克隆，
+               原版那张仍在，两张可以同时持有。
+         ================================================================== -->
     <ModOp GUID="191388" Type="addNextSibling">
         <Asset>
+            <!-- GuildhouseItem = 工会物品模板。
+                 模板默认装槽是 GuildHouse（工会），本卡没写 Item/Allocation，
+                 所以只能装进工会，装不进北极小屋；想要北极小屋版就是卡二。 -->
             <Template>GuildhouseItem</Template>
             <Values>
                 <Standard>
                     <GUID>1400000006</GUID>
+                    <!-- 内部名，游戏里不显示，只用于和别的资产区分 -->
                     <Name>chuanxiaotouzi</Name>
+                    <!-- 图标是 mod 自带的 PNG（data/modgraphics/ 下），卡二复用它 -->
                     <IconFilename>data/modgraphics/icons/icon_chuanxiaotouzi.png</IconFilename>
-                    <InfoDescription>21354</InfoDescription>
+                    <!-- 简介文本 GUID：1400000007 是本 mod 自己的编号（卡一占 06 / 07 一对）。
+                         原卡这里写的是原版 21354（= 原版物品 192450 的简介），
+                         那等于把原版「说服者法瑞斯·阿瑟雷密」的简介也一起改掉，
+                         所以拆成独立编号。 -->
+                    <InfoDescription>1400000007</InfoDescription>
                 </Standard>
                 <Text>
+                    <!-- 英文名：英文语言下显示这里。
+                         中文名不在这里，而是 texts_chinese.xml 里按资产 GUID
+                         1400000006 注入的（游戏按资产 GUID 查本地化文本）。 -->
                     <LocaText>
                         <English>
                             <Text>Feras Alsarami the Persuader</Text>
                             <Status>Exported</Status>
                         </English>
                     </LocaText>
-                    <LineID>29139</LineID>
+                    <!-- LineID 同样改成自己的 1400000007：
+                         原卡借用原版物品 192450 的 LineID 29139，虽然 29139
+                         在文本表里查不到、实际不生效，但没必要和原版共用编号。 -->
+                    <LineID>1400000007</LineID>
                 </Text>
                 <Item>
+                    <!-- 一叠最多 1 个 -->
                     <MaxStackSize>1</MaxStackSize>
+                    <!-- 传奇（金色边框、商人池里权重低） -->
                     <Rarity>Legendary</Rarity>
+                    <!-- Specialist = 专家，卡面显示为人物 -->
                     <ItemType>Specialist</ItemType>
+                    <!-- 交易售价：游戏币 1000 / 线上货币 50 -->
                     <TradePrice>1000</TradePrice>
                     <TradePriceOnlineCurrency>50</TradePriceOnlineCurrency>
+                    <!-- 读档或 DLC 状态变化后重新套用一次效果，避免老存档里卡「失效」 -->
                     <ReapplyEffects>EmpireOfTheSkies</ReapplyEffects>
                 </Item>
-                
+
+                <!-- 生产加成：生产力 +300%（作用对象在下面 ItemEffect 里） -->
                 <FactoryUpgrade>
-                    <!-- 生产力提升 -->
                     <ProductivityUpgrade>
                         <Value>300</Value>
+                        <!-- Percental 1 = 按百分比算，不是绝对值 -->
                         <Percental>1</Percental>
                     </ProductivityUpgrade>
                 </FactoryUpgrade>
-                
-                <!-- 对什么建筑其效果 -->
+
+                <!-- 作用对象：5 个原版目标组，全部是旧世界 / 新世界 / 安贝沙的生产建筑。
+                     目标组可以套目标组，游戏会递归展开。这里点名的是「组」而不是具体建筑，
+                     所以以后同类建筑也会自动吃到加成。 -->
                 <ItemEffect>
                     <EffectTargets>
-                        <!-- 生产建筑 -->
+                        <!-- 所有生产建筑（179 座） -->
                         <Item>
                             <GUID>193856</GUID>
                         </Item>
-                        <!-- 果园，化学厂，工匠工作坊，生产线 -->
+                        <!-- 所有果园（7 座） -->
                         <Item>
                             <GUID>194008</GUID>
                         </Item>
+                        <!-- 所有化学厂（11 座） -->
                         <Item>
                             <GUID>194011</GUID>
                         </Item>
+                        <!-- 所有生产线（5 座） -->
                         <Item>
                             <GUID>194023</GUID>
                         </Item>
+                        <!-- 所有工匠的工作坊（4 座） -->
                         <Item>
                             <GUID>194024</GUID>
                         </Item>
                     </EffectTargets>
                 </ItemEffect>
 
+                <!-- 空 = 这张卡没有「点击使用」的动作（不是消耗品） -->
                 <ItemAction />
-                
-                <!-- 提供电力 -->
+
+                <!-- 自带电力：相当于随地提供一座发电厂的电，
+                     所以装上它的工厂不用再接电网。
+                     ElectricityBoostUpgrade 留空 = 不做额外的电力倍率加成。 -->
                 <IndustrializableUpgrade>
                     <ProvidedIndustrializationType>Powerplant</ProvidedIndustrializationType>
                     <ElectricityBoostUpgrade />
                     <ProvideIndustrialization>1</ProvideIndustrialization>
                 </IndustrializableUpgrade>
 
-                <!-- 其他建筑效果 -->
+                <!-- 建筑加成：维护费 −75%、所需劳动力 −75% -->
                 <BuildingUpgrade>
-                    <!-- 维护费用减少 -->
                     <MaintenanceUpgrade>
                         <Value>-75</Value>
                         <Percental>1</Percental>
                     </MaintenanceUpgrade>
-                    <!-- 劳动力减少 -->
                     <WorkforceAmountUpgrade>
                         <Value>-75</Value>
                         <Percental>1</Percental>
                     </WorkforceAmountUpgrade>
                 </BuildingUpgrade>
-                
-                <!-- 减少起义，起火，爆炸，传染病几率 -->
+
+                <!-- 四类事故各 −99%：暴动 / 火灾 / 疾病 / 爆炸。
+                     负数 = 降低发生率；这些字段在工会卡里有 40 张原版卡在用。 -->
                 <IncidentInfectableUpgrade>
                     <IncidentRiotIncreaseUpgrade>
                         <Value>-99</Value>
@@ -101,7 +157,8 @@
                     </IncidentExplosionIncreaseUpgrade>
                 </IncidentInfectableUpgrade>
 
-                <!-- 远征属性 -->
+                <!-- 远征属性：男性、外交 20、催眠师（PerkHypnotist）。
+                     只有把卡放到船上出征时才用得上。 -->
                 <ExpeditionAttribute>
                     <BaseMorale>0</BaseMorale>
                     <ExpeditionAttributes>
@@ -119,30 +176,197 @@
                         </Item>
                     </ExpeditionAttributes>
                     <ItemDifficulties>Average;Hard</ItemDifficulties>
-                    <FluffText>21354</FluffText>
+                    <!-- 远征框里显示的那句风味文本，和简介共用 1400000007 -->
+                    <FluffText>1400000007</FluffText>
                 </ExpeditionAttribute>
 
-                <IncidentInfluencerUpgrade />
-                <ModuleOwnerUpgrade />
-                <CultureUpgrade />
-                <ResidenceUpgrade />
-                <PopulationUpgrade />
-                <Locked />
-                <Buff />
-                <CraftableItem />
-                <HeaterUpgrade />
-                <PowerplantUpgrade />
-                <IrrigationUpgrade />
-                <EcoSystemProviderUpgrade />
+                <!-- 下面是「占位空块」：原版物品资产里基本都会把这一整套写全，
+                     留空 = 本卡不做这项加成，游戏读空块不会报错。
+                     保留它们是为了让资产结构和原版一致，删掉一般也不影响。 -->
+                <IncidentInfluencerUpgrade />   <!-- 事故影响范围：不改 -->
+                <ModuleOwnerUpgrade />          <!-- 模块上限：不改 -->
+                <CultureUpgrade />              <!-- 吸引力：不改 -->
+                <ResidenceUpgrade />            <!-- 住所加成：不改 -->
+                <PopulationUpgrade />           <!-- 人口：不改 -->
+                <Locked />                      <!-- 空 = 不锁 DLC，任何存档都能刷出 -->
+                <Buff />                        <!-- 没有被动 Buff -->
+                <CraftableItem />               <!-- 空 = 老奈特工坊不能合成 -->
+                <HeaterUpgrade />               <!-- 供暖范围：不改（北极版才用得上） -->
+                <PowerplantUpgrade />           <!-- 发电厂模块：不改 -->
+                <IrrigationUpgrade />           <!-- 灌溉：不改 -->
+                <EcoSystemProviderUpgrade />    <!-- 生态：不改 -->
             </Values>
         </Asset>
     </ModOp>
 
-    <!-- Old World -->
-    <!-- 192069: Sir Archbald -->
-    <!-- 190774: Eli Bleakworth (Jailer) -->
-    <!-- 192068: Madame Kahina (Emporio Exotique) -->
-    <!-- 192070: Anne Harlow (Pirates) -->
+    <!-- ==================================================================
+         卡二：传销头子·北极版（北极小屋 / Lodge）  GUID 1400000008
+         ··················································
+         同一张脸、同一个名字，加「（北极版）」后缀，装槽改成 Lodge。
+         效果：生产力 +300%（和老卡同档，天然气随之 ×4）、维护费 −75%、
+               人力 −75%（等效加人口）、火灾/爆炸 −99%、远征属性。
+         作用：所有北极生产建筑 193770（18 座，含北极天然气矿场）。
+
+         两条设计口径（刻意不写独立字段）：
+           1. 天然气不挂 AdditionalOutput：气矿产量被 ProductivityUpgrade 覆盖，
+              生产力 +300% 就是天然气 +300%，不额外塞「副产气」。
+           2. 「加人口」不写 ResidentsUpgrade：改用 WorkforceAmountUpgrade −75%，
+              同样的人口能养 4 倍工厂，等效加人口；也避免出现
+              「生产建筑 + 住所」这种原版没有的混装目标。
+
+         每个字段的原版原型（都在北极小屋卡里出现过）：
+           目标集合     116160 音乐盒（EffectTargets 与 193770 一致）
+           生产力       116098 象牙雪地护目镜 +60%
+           维护费       116069 三齿鱼叉 −50%
+           人力         116043 皮筏 / 116071 鱼叉头 −50%
+           防火防爆     小屋卡无先例（工会卡 40 张在用），字段同卡一
+           装槽 Lodge   1772、116158 等全部北极小屋卡
+         ================================================================== -->
+    <ModOp GUID="191388" Type="addNextSibling">
+        <Asset>
+            <!-- 同样用 GuildhouseItem 模板；北极小屋的插槽接受 Lodge 类物品 -->
+            <Template>GuildhouseItem</Template>
+            <Values>
+                <Standard>
+                    <GUID>1400000008</GUID>
+                    <Name>arctic_overlord</Name>
+                    <!-- 复用卡一的头像，不另做图 -->
+                    <IconFilename>data/modgraphics/icons/icon_chuanxiaotouzi.png</IconFilename>
+                    <!-- 简介 = 远征 FluffText = 1400000009，文本在 texts_chinese.xml 里注入 -->
+                    <InfoDescription>1400000009</InfoDescription>
+                </Standard>
+                <Text>
+                    <!-- 英文名：加 (Arctic Edition)，和中文「（北极版）」对应 -->
+                    <LocaText>
+                        <English>
+                            <Text>Feras Alsarami the Persuader (Arctic Edition)</Text>
+                            <Status>Exported</Status>
+                        </English>
+                    </LocaText>
+                    <!-- 1400000009 是本 mod 自己写的文本 GUID，不覆盖任何原版文本 -->
+                    <LineID>1400000009</LineID>
+                </Text>
+                <Item>
+                    <!-- 关键：显式指定装槽 = 北极小屋。
+                         不写这一行就会继承模板默认的 GuildHouse（工会），
+                         那样卡只能进工会，进不了北极小屋。 -->
+                    <Allocation>Lodge</Allocation>
+                    <MaxStackSize>1</MaxStackSize>
+                    <Rarity>Legendary</Rarity>
+                    <ItemType>Specialist</ItemType>
+                    <TradePrice>1000</TradePrice>
+                    <TradePriceOnlineCurrency>50</TradePriceOnlineCurrency>
+                </Item>
+
+                <!-- 生产：生产力 +300%（和老卡同档）。
+                     气矿周期产量×4，所以北极天然气产出也×4，不另挂 AdditionalOutput。 -->
+                <FactoryUpgrade>
+                    <ProductivityUpgrade>
+                        <Value>300</Value>
+                        <Percental>1</Percental>
+                    </ProductivityUpgrade>
+                </FactoryUpgrade>
+
+                <!-- 作用对象：只有「所有北极生产建筑」这一个目标组。
+                     18 座：伐木工人棚屋、锯木厂、炭窑、北极天然气矿场、深层金矿、
+                     鲸鱼/海豹/驯鹿/熊猎人、一级狩猎小屋、鹅农场、哈士奇农场、
+                     干肉饼工厂、油灯工厂、连帽大衣工厂、睡袋工厂、
+                     雪橇骨架工厂、犬雪橇工厂。
+                     原版 116160 音乐盒用的就是同一个目标组。 -->
+                <ItemEffect>
+                    <EffectTargets>
+                        <Item>
+                            <GUID>193770</GUID>
+                        </Item>
+                    </EffectTargets>
+                </ItemEffect>
+
+                <ItemAction />
+
+                <!-- 维护费 −75% + 人力 −75%，和老卡同档。
+                     人力 −75% 就是「同样的人口养 4 倍工厂」，用来替代加人口。 -->
+                <BuildingUpgrade>
+                    <MaintenanceUpgrade>
+                        <Value>-75</Value>
+                        <Percental>1</Percental>
+                    </MaintenanceUpgrade>
+                    <WorkforceAmountUpgrade>
+                        <Value>-75</Value>
+                        <Percental>1</Percental>
+                    </WorkforceAmountUpgrade>
+                </BuildingUpgrade>
+
+                <!-- 防火、防爆各 −99%（气矿基础爆炸率 16 → 约 0.16） -->
+                <IncidentInfectableUpgrade>
+                    <IncidentFireIncreaseUpgrade>
+                        <Value>-99</Value>
+                        <Percental>1</Percental>
+                    </IncidentFireIncreaseUpgrade>
+                    <IncidentExplosionIncreaseUpgrade>
+                        <Value>-99</Value>
+                        <Percental>1</Percental>
+                    </IncidentExplosionIncreaseUpgrade>
+                </IncidentInfectableUpgrade>
+
+                <!-- 远征属性：和卡一不同，这套偏「在北极活得下去」 -->
+                <ExpeditionAttribute>
+                    <BaseMorale>0</BaseMorale>
+                    <ExpeditionAttributes>
+                        <Item>
+                            <Attribute>PerkMale</Attribute>
+                            <Amount>1</Amount>
+                        </Item>
+                        <Item>
+                            <Attribute>Medicine</Attribute>
+                            <Amount>30</Amount>
+                        </Item>
+                        <Item>
+                            <Attribute>Crafting</Attribute>
+                            <Amount>30</Amount>
+                        </Item>
+                        <Item>
+                            <Attribute>Hunting</Attribute>
+                            <Amount>15</Amount>
+                        </Item>
+                        <Item>
+                            <Attribute>Faith</Attribute>
+                            <Amount>10</Amount>
+                        </Item>
+                    </ExpeditionAttributes>
+                    <ItemDifficulties>Average;Hard</ItemDifficulties>
+                    <FluffText>1400000009</FluffText>
+                </ExpeditionAttribute>
+
+                <!-- 占位空块，含义同卡一 -->
+                <IncidentInfluencerUpgrade />   <!-- 事故影响范围：不改 -->
+                <ModuleOwnerUpgrade />          <!-- 模块上限：不改 -->
+                <CultureUpgrade />              <!-- 吸引力：不改 -->
+                <ResidenceUpgrade />            <!-- 住所加成：不改 -->
+                <!-- 锁航道 DLC（410042）：北极小屋本来就在这个 DLC 里 -->
+                <Locked>
+                    <DLCDependency>410042</DLCDependency>
+                </Locked>
+                <Buff />                        <!-- 没有被动 Buff -->
+                <CraftableItem />               <!-- 空 = 老奈特工坊不能合成 -->
+                <HeaterUpgrade />               <!-- 供暖：不改（想要暖炉范围加成可以在这里加 HeatRangeUpgrade） -->
+                <PowerplantUpgrade />           <!-- 发电厂模块：不改 -->
+                <IrrigationUpgrade />           <!-- 灌溉：不改 -->
+                <EcoSystemProviderUpgrade />    <!-- 生态：不改 -->
+            </Values>
+        </Asset>
+    </ModOp>
+
+    <!-- ==================================================================
+         商人池：让两张卡能被刷出来
+         ··················································
+         写法统一是 Type=add + Path=/Values/RewardPool/ItemsPool，
+         在商人奖励池的 ItemsPool 列表末尾追加一条 <Item>。
+         Weight 100 = 出现权重很高，很容易刷到。
+         ================================================================== -->
+
+    <!-- 卡一 · 旧世界
+         192069 亚奇博德·布莱克爵士 / 190774 伊莱·布利克沃斯 /
+         192068 卡希纳女士 / 192070 安·哈洛（海盗） -->
     <ModOp Type="add" GUID="192069,190774,192068,192070" Path="/Values/RewardPool/ItemsPool">
         <Item>
             <ItemLink>1400000006</ItemLink>
@@ -150,9 +374,8 @@
         </Item>
     </ModOp>
 
-    <!-- New World -->
-    <!-- 192073: Isabel Sarmento -->
-    <!-- 192071: Jean La Fortune (Pirates) -->
+    <!-- 卡一 · 新世界
+         192073 伊莎贝尔·萨曼托 / 192071 尚·拉福图（海盗） -->
     <ModOp Type="add" GUID="192073,192071" Path="/Values/RewardPool/ItemsPool">
         <Item>
             <ItemLink>1400000006</ItemLink>
@@ -160,8 +383,10 @@
         </Item>
     </ModOp>
 
-    <!-- Cape Trelawney -->
-    <!-- 193452: Old Nate -->
+    <!-- 卡一 · 崔老妮海角：193452 老奈特
+         193452 = Third_party_06 (Old Nate) 的 EndGame 池，也就是崔老妮那个交易商。
+         北极的老奈特是另一个资产 117422 Third_party_06b (Old Nate Arctic)：
+         GoodsTrader=0、所有 OfferingItems=0、没有 RewardPool，只是制作中心，不卖卡。 -->
     <ModOp Type="add" GUID="193452" Path="/Values/RewardPool/ItemsPool">
         <Item>
             <ItemLink>1400000006</ItemLink>
@@ -169,20 +394,20 @@
         </Item>
     </ModOp>
 
-    <!-- Arctic -->
-    <!-- 193835: Qumaq -->
-    <ModOp Type="add" GUID="193835" Path="/Values/RewardPool/ItemsPool">
+    <!-- 卡一 · 安贝沙：127480 柯提马皇帝 -->
+    <ModOp Type="add" GUID="127480" Path="/Values/RewardPool/ItemsPool">
         <Item>
             <ItemLink>1400000006</ItemLink>
             <Weight>100</Weight>
         </Item>
     </ModOp>
 
-    <!-- Enbesa -->
-    <!-- 127480: Emperor Ketema -->
-    <ModOp Type="add" GUID="127480" Path="/Values/RewardPool/ItemsPool">
+    <!-- 北极：库马克 193835（Third_party_11 (Inuit) 的 EndGame 池）
+         只上架卡二。老卡是工会卡，北极没有工会，刷出来用不了。
+         北极的老奈特是 117422 Third_party_06b 制作中心，没有池子，不参与。 -->
+    <ModOp Type="add" GUID="193835" Path="/Values/RewardPool/ItemsPool">
         <Item>
-            <ItemLink>1400000006</ItemLink>
+            <ItemLink>1400000008</ItemLink>
             <Weight>100</Weight>
         </Item>
     </ModOp>
