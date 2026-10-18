@@ -1,8 +1,8 @@
 {
-  "Version": "1.0.0",
+  "Version": "2.0.0",
   "ModID": "local-docklands-contracts",
   "ModName": {
-    "English": "More Docklands Trade Slots",
-    "Chinese": "港湾兑换槽位增加"
+    "English": "Docklands Trade Slots + Goods",
+    "Chinese": "港湾兑换槽位+货物"
   }
 }

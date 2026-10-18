@@ -124,14 +124,14 @@
                     <ProvideIndustrialization>1</ProvideIndustrialization>
                 </IndustrializableUpgrade>
 
-                <!-- 建筑加成：维护费 −75%、所需劳动力 −75% -->
+                <!-- 建筑加成：维护费 −90%、所需劳动力 −90% -->
                 <BuildingUpgrade>
                     <MaintenanceUpgrade>
-                        <Value>-75</Value>
+                        <Value>-90</Value>
                         <Percental>1</Percental>
                     </MaintenanceUpgrade>
                     <WorkforceAmountUpgrade>
-                        <Value>-75</Value>
+                        <Value>-90</Value>
                         <Percental>1</Percental>
                     </WorkforceAmountUpgrade>
                 </BuildingUpgrade>
@@ -203,14 +203,14 @@
          卡二：传销头子·北极版（北极小屋 / Lodge）  GUID 1400000008
          ··················································
          同一张脸、同一个名字，加「（北极版）」后缀，装槽改成 Lodge。
-         效果：生产力 +300%（和老卡同档，天然气随之 ×4）、维护费 −75%、
-               人力 −75%（等效加人口）、火灾/爆炸 −99%、远征属性。
+         效果：生产力 +300%（和老卡同档，天然气随之 ×4）、维护费 −90%、
+               人力 −90%（等效加人口）、火灾/爆炸 −99%、远征属性。
          作用：所有北极生产建筑 193770（18 座，含北极天然气矿场）。
 
          两条设计口径（刻意不写独立字段）：
            1. 天然气不挂 AdditionalOutput：气矿产量被 ProductivityUpgrade 覆盖，
               生产力 +300% 就是天然气 +300%，不额外塞「副产气」。
-           2. 「加人口」不写 ResidentsUpgrade：改用 WorkforceAmountUpgrade −75%，
+           2. 「加人口」不写 ResidentsUpgrade：改用 WorkforceAmountUpgrade −90%，
               同样的人口能养 4 倍工厂，等效加人口；也避免出现
               「生产建筑 + 住所」这种原版没有的混装目标。
 
@@ -283,15 +283,15 @@
 
                 <ItemAction />
 
-                <!-- 维护费 −75% + 人力 −75%，和老卡同档。
-                     人力 −75% 就是「同样的人口养 4 倍工厂」，用来替代加人口。 -->
+                <!-- 维护费 −90% + 人力 −90%，和老卡同档。
+                     人力 −90% 就是「同样的人口养 10 倍工厂」，用来替代加人口。 -->
                 <BuildingUpgrade>
                     <MaintenanceUpgrade>
-                        <Value>-75</Value>
+                        <Value>-90</Value>
                         <Percental>1</Percental>
                     </MaintenanceUpgrade>
                     <WorkforceAmountUpgrade>
-                        <Value>-75</Value>
+                        <Value>-90</Value>
                         <Percental>1</Percental>
                     </WorkforceAmountUpgrade>
                 </BuildingUpgrade>

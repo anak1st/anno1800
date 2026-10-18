@@ -15,7 +15,7 @@ Anno1800\
 ├── edit_pools.py       改 mod 卡池（report / tidy / add / drop / move / exclusive / assign）
 ├── query.py           查数据库：card / find / show / trader / building / good
 ├── pyproject.toml       uv 项目定义（依赖 lxml / typer / rich，dev 是 pytest / ruff）
-├── mods\        12 个维护中的 mod，每个含 data\ + modinfo.json + README.md
+├── mods\        11 个维护中的 mod，每个含 data\ + modinfo.json + README.md
 ├── docs\        参考文档（game.md、reference.md、cards.md、cards-special.md、data-model.md）
 ├── data\        解析层：一个资产一个 JSON（不进 git，可重建）
 ├── old\         迁移归档：旧的聚合 JSON 与被替换的代码（不进 git）
@@ -34,7 +34,7 @@ Anno1800\
 
 | 目录 / 文件 | 放什么 | 进 git |
 |---|---|---|
-| `mods\` | **维护中的 12 个 mod** —— 已验证，随时可复制进游戏 | ✅ |
+| `mods\` | **维护中的 11 个 mod** —— 已验证，随时可复制进游戏 | ✅ |
 | `docs\` | 参考文档 | ✅ |
 | `src\anno\` | 工具链的库（一个包） | ✅ |
 | 根目录 `build_*.py`、`edit_pools.py`、`query.py` | 入口脚本，一个脚本一个目标 | ✅ |
@@ -48,7 +48,7 @@ Anno1800\
 
 **命名约定**：mod 文件夹统一为**全小写英文 + 中划线（kebab-case）**，不含空格、方括号等特殊字符。见第三节的清单。
 
-> `mods\` 里的 12 个 mod，有 3 个原本来自 mod.io 平台（`more-water`、`whole-island-buildings`、`all-items-unlocked`）。它们**已不再依赖 mod.io 订阅** —— 本地副本齐全，`modinfo.json` 也已补好。
+> `mods\` 里的 11 个 mod，有 3 个原本来自 mod.io 平台（`more-water`、`whole-island-buildings`、`all-items-unlocked`）。它们**已不再依赖 mod.io 订阅** —— 本地副本齐全，`modinfo.json` 也已补好。
 
 ---
 
@@ -243,21 +243,20 @@ Load [Gameplay] Airship Loading Speed (unversioned, ...) from mods\[Gameplay] Ai
 
 ---
 
-## 三、`mods\` —— 维护中的 12 个 mod
+## 三、`mods\` —— 维护中的 11 个 mod
 
 每个文件夹含 `data\`、`modinfo.json`、`README.md`，可直接复制进游戏 `mods\`。
 
 | mod | 分类 | 一句话说明 |
 |---|---|---|
-| `mr-long` | Cheat | 两张传奇专家「传销头子」：工会版（生产力 +300%、维护/人力 −75%、四类事故 −99%、自带电力）+ 北极小屋版（生产力 +300%、维护/人力 −75%、防火防爆 −99%） |
+| `mr-long` | Cheat | 两张传奇专家「传销头子」：工会版（生产力 +300%、维护 −90% / 人力 −90%、四类事故 −99%、自带电力）+ 北极小屋版（生产力 +300%、维护 −90% / 人力 −90%、防火防爆 −99%） |
 | `airship-loading-speed` | Gameplay | 飞艇码头装卸速度 `2 → 8` |
 | `docklands-cooldown` | Gameplay | 贸易合同商人往返时间 → 5 分钟 |
-| `docklands-contracts` | Gameplay | 港湾兑换槽位增加（`1 → 7`） |
+| `docklands-contracts` | Gameplay | 港湾兑换槽位 `1 → 7` + 5 个商人追加 27 种货（含 7 条 Legendary） |
 | `harbour-area` | Misc | 港口建造范围 `28 → 56` |
 | `pump-radius` | Misc | 油井/气井模块半径 → `20` |
 | `no-forest-planting` | Gameplay | 21 条 ModOp / 24 个 GUID，种植类建筑不再需要种森林 |
 | `research-easy` | Cheat | 研发成本固定 500 不递增、研发时间 1 分钟封顶、气矿可移动 |
-| `trade-contracts` | Gameplay | 6 个商人贸易合同追加货物，含 5 条 Legendary DLC 货 |
 | `more-water` | Cheat | Enbesa 灌溉范围 8/8/8/9/11 格，管道容量 1000 |
 | `whole-island-buildings` | Gameplay | 45 条 ModOp，一座公共建筑满足全岛 |
 | `all-items-unlocked` | Misc | 49 条 ModOp（7 replace + 42 merge），整体替换 7 位商人的奖励池（两个海盗已移出） |
@@ -278,7 +277,7 @@ Load [Gameplay] Airship Loading Speed (unversioned, ...) from mods\[Gameplay] Ai
 
 ## 四、还原与验证
 
-1. **还原 mod**：把 `mods\` 下的 12 个文件夹整个复制到
+1. **还原 mod**：把 `mods\` 下的 11 个文件夹整个复制到
    `<game_dir>\mods\`（或官方的 `%USERPROFILE%\Documents\Anno 1800\mods\`），`game_dir` 见 `anno.json`。
    每个都带 `modinfo.json`，复制即可用，**不依赖 mod.io 订阅**。
 
