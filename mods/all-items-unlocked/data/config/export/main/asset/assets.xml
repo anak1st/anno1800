@@ -1219,11 +1219,14 @@
 			<IgnoreUnlocks>1</IgnoreUnlocks>
 		</RewardPool>
 	</ModOp>
-	<!-- 老奈特（Old Nate） - 崔老妮海角 / 北极 | 共 101 项：载具 33、娱乐 22、其他 46 -->
+	<!-- 老奈特（Old Nate） - 崔老妮海角 / 北极 | 共 114 项：建筑 1、载具 45、娱乐 22、其他 46 -->
 	<ModOp Type="replace" GUID='193452' Path="/Values/RewardPool">
 		<RewardPool>
 			<ItemsPool>
-				<!-- ===== 载具（33 项） ===== -->
+				<!-- ===== 建筑（1 项） ===== -->
+				<!-- 工会（1 项） -->
+				<Item><ItemLink>4277</ItemLink><Weight>10</Weight></Item>
+				<!-- ===== 载具（45 项） ===== -->
 				<!-- 打捞船（33 项） -->
 				<Item><ItemLink>112550</ItemLink><Weight>10</Weight></Item>
 				<Item><ItemLink>112556</ItemLink><Weight>10</Weight></Item>
@@ -1258,6 +1261,19 @@
 				<Item><ItemLink>113362</ItemLink><Weight>10</Weight></Item>
 				<Item><ItemLink>112559</ItemLink><Weight>10</Weight></Item>
 				<Item><ItemLink>112569</ItemLink><Weight>10</Weight></Item>
+				<!-- 飞船（12 项） -->
+				<Item><ItemLink>4132</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>4133</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>2232</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>4117</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>4134</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>117303</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>2226</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>116173</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>116174</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>116175</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>117302</ItemLink><Weight>10</Weight></Item>
+				<Item><ItemLink>4135</ItemLink><Weight>10</Weight></Item>
 				<!-- ===== 娱乐（22 项） ===== -->
 				<!-- 博物馆（10 项） -->
 				<Item><ItemLink>112825</ItemLink><Weight>10</Weight></Item>

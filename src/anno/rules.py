@@ -47,7 +47,7 @@ POPULATION_OWNER = "卡希纳"
 SERVICE_OWNER = "卡希纳"
 SHOP_OWNER = "卡希纳"
 SHIP_OWNER = "布莱克"
-AIRSHIP_OWNER = "库马克"
+AIRSHIP_OWNERS: tuple[str, ...] = ("库马克", "老奈特")
 
 
 @dataclass(frozen=True)
@@ -125,7 +125,7 @@ def decide(card, targets: CardTargets) -> Decision | None:
     if place == "军舰" or targets.all_of(DEFENCE_TPL):                       # 1 海军
         return Decision(("布莱克",), "1 海军")
     if place == "飞船" or targets.all_of(AIRSHIP_TPL) or targets.any_name(AIRSHIP_WORDS):   # 2 飞船
-        return Decision((AIRSHIP_OWNER,), "2 飞船")
+        return Decision(AIRSHIP_OWNERS, "2 飞船")
     if place in ("打捞船", "地图 / 探险点"):                                  # 3 打捞 / 探险
         return Decision(("老奈特",), "3 打捞/探险")
     if place in SHIP_SLOTS:                                                 # 4 船 / 港务
