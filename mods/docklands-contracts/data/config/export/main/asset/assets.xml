@@ -1,5 +1,5 @@
 <ModOps>
 	<ModOp Type="merge" GUID="601470" Path="/Values/Dockland">
-		<TradeContractSlotsForMainBuilding>3</TradeContractSlotsForMainBuilding>
+		<TradeContractSlotsForMainBuilding>7</TradeContractSlotsForMainBuilding>
 	</ModOp>
 </ModOps>

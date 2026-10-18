@@ -252,7 +252,7 @@ Load [Gameplay] Airship Loading Speed (unversioned, ...) from mods\[Gameplay] Ai
 | `mr-long` | Cheat | 两张传奇专家「传销头子」：工会版（生产力 +300%、维护/人力 −75%、四类事故 −99%、自带电力）+ 北极小屋版（生产力 +300%、维护/人力 −75%、防火防爆 −99%） |
 | `airship-loading-speed` | Gameplay | 飞艇码头装卸速度 `2 → 8` |
 | `docklands-cooldown` | Gameplay | 贸易合同商人往返时间 → 5 分钟 |
-| `docklands-contracts` | Gameplay | 港湾兑换槽位增加（`1 → 3`） |
+| `docklands-contracts` | Gameplay | 港湾兑换槽位增加（`1 → 7`） |
 | `harbour-area` | Misc | 港口建造范围 `28 → 56` |
 | `pump-radius` | Misc | 油井/气井模块半径 → `20` |
 | `no-forest-planting` | Gameplay | 21 条 ModOp / 24 个 GUID，种植类建筑不再需要种森林 |
